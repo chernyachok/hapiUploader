@@ -3,7 +3,7 @@ const inert = require('inert');
 const path = require('path');
 const joi = require('joi');
 const handleFileUpload = require('./handleFileUpload');
-
+const getListOfFiles = require('./getListOfFiles');
 const server = Hapi.server({
     port: 3000,
     host: 'localhost',
@@ -19,13 +19,7 @@ server.route({
     path: '/get_list_of_files',
     options: {
         description: 'outputs all files previously uploaded',
-        handler: (req, h) => {
-            let listOffileNames = '';
-            list.files.forEach(item => {
-                listOffileNames += (item.src + '<br/>')
-            });
-            return h.response(listOffileNames).type('text/html');
-        }
+        handler: getListOfFiles
     }
 
 })

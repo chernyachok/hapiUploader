@@ -1,26 +1,20 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const list = require('./list.json');
 
 const handleFileUpload = async file => {
     const fileName = file.hapi.filename;
     const data = file._data;
-    const parsedList = { ...list };
+    const parsedList = list.files ? { ...list } : {files: []};
     for(let i = 0; i < parsedList.files.length; i++){
         if(parsedList.files[i].src === fileName)
             return {message: 'such file already exist'};
     }
-    fs.writeFile(`./public/imgs/${fileName}`, data, err => {
-        if (err) {
-            throw err
-        }
+    await fs.writeFile(`./public/imgs/${fileName}`, data)
 
-        parsedList.files.push({ id: new Date().getTime(), src: fileName });
+    parsedList.files.push({ id: new Date().getTime(), src: fileName });
 
-        fs.writeFile('list.json', JSON.stringify(parsedList), (err) => {
-            if (err) throw err
-            return {message: 'uploaded succcesfully'}
-        })
-    })
+    await fs.writeJson('list.json', parsedList);
+    return {message: 'saved succcesfully'}
 }
 
 module.exports = handleFileUpload;
