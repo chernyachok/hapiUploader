@@ -2,8 +2,7 @@ const Hapi = require('hapi');
 const inert = require('inert');
 const path = require('path');
 const joi = require('joi');
-const fs = require('fs');
-var list = require('./list.json');
+const handleFileUpload = require('./handleFileUpload');
 
 const server = Hapi.server({
     port: 3000,
@@ -14,34 +13,6 @@ const server = Hapi.server({
         }
     }
 });
-
-const handleFileUpload = file => {
-    return new Promise((resolve, reject) => {
-        const fileName = file.hapi.filename;
-        const data = file._data;
-        const parsedList = { ...list };
-        parsedList.files.forEach(item => {
-            if(item.src === fileName){
-                console.log('loop true')
-                return resolve({message: 'such file exist'})
-            }
-        })
-        console.log('continue');
-        fs.writeFile(`./public/imgs/${fileName}`, data, err => {
-            if (err) {
-                reject(err)
-            }
-
-            parsedList.files.push({ id: new Date().getTime(), src: fileName });
-
-            fs.writeFile('list.json', JSON.stringify(parsedList), (err) => {
-                if (err) throw err
-            })
-            console.log('upl succes');
-            resolve({ message: 'uploaded successfully' })
-        })
-    })
-}
 
 server.route({
     method: 'GET',
@@ -63,11 +34,10 @@ server.route({
     method: 'POST',
     path: '/files',
     options: {
-        handler: (req, h) => {
+        handler: async (req, h) => {
             const { file } = req.payload;
-
-            const response = handleFileUpload(file)
-            return response;
+            const response = await handleFileUpload(file)
+            return h.response(response);
         },
         payload: {
             output: 'stream',
