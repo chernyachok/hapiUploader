@@ -32,7 +32,12 @@ module.exports.getListOfFiles = async (req, h) => {
         return h.response(listOffileNames).type('text/html');
     }
 module.exports.fileDelete = async (req, h) => {
-    // console.log(path.join(__dirname, '..' , '..' , 'public', req.payload.fileToBeDeleted));
-    await fs.remove(path.join(__dirname, '..' , '..' , 'public', 'imgs', req.payload.fileToBeDeleted))
+    const { fileToBeDeleted } = req.payload;
+
+    await fs.remove(path.join(__dirname, '..' , '..' , 'public', 'imgs', fileToBeDeleted));
+    let parsedList = await fs.readJson(path.join(__dirname, '..', '..', 'configurations/list.json'));
+    parsedList.files = parsedList.files.filter(item => item.src !== fileToBeDeleted);
+    await fs.writeJson(path.join(__dirname, '..', '..', 'configurations/list.json'), parsedList);
+
     return {message: 'deleted successfully'}
 }
