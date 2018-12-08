@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-
 const path = require('path');
 const handleFileUpload = async file => {
     const fileName = file.hapi.filename;

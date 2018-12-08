@@ -1,3 +1,4 @@
+const validator = require('./validator');
 const fileController = require('./controller');
 
 module.exports = async (server) => {
@@ -15,7 +16,12 @@ module.exports = async (server) => {
     server.route({
         method: 'DELETE',
         path: '/files',
-        handler: fileController.fileDelete
+        options: {
+            handler: fileController.fileDelete,
+            validate: {
+                payload: validator.deleteValidator
+            }
+        }
     })
 
     server.route({
@@ -25,7 +31,7 @@ module.exports = async (server) => {
             handler: fileController.fileUpload,
             payload: {
                 output: 'stream',
-            }
+            },
         }
     })
 
