@@ -6,6 +6,9 @@ const initServer = async () => {
     const server = Hapi.server({
         port: process.env.PORT || 3000,
         host: process.env.HOST || 'localhost',
+        // router: {
+        //     stripTrailingSlash: true
+        // }
     });
     
     await server.register({

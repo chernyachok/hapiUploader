@@ -5,6 +5,12 @@ module.exports = async (server) => {
 
     server.route({
         method: 'GET',
+        path: '/main',
+        handler: fileController.mainPage
+    })
+
+    server.route({
+        method: 'GET',
         path: '/files',
         options: {
             description: 'outputs all files previously uploaded',

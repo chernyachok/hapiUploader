@@ -1,4 +1,5 @@
 const fileSystem = require('./fileSystem');
+const axios = require('axios');
 
 const handleFileUpload = async file => {
     const fileName = file.hapi.filename;
@@ -38,4 +39,28 @@ module.exports.fileDelete = async (req, h) => {
     await fileSystem.writeJson(parsedList);
 
     return {message: 'deleted successfully'};
+}
+
+module.exports.mainPage = async (req, h) => {
+    try {
+        const { data } = await axios.get('http://localhost:8000/files');
+        let files = '<tr><th>id</th><th>filename</th></tr>';
+        data.length && data.forEach(item => {
+           files += `
+            <tr>
+                <td>${item.id}</td>
+                <td><a href='http://localhost:8000/files/${item.src}'}>${item.src}</a></td>
+            </tr>
+           `;
+        });
+        return h.response(`
+            <table>
+                ${files}
+            </table>
+        `)
+        .type('text/html')
+        .code(200);
+    } catch (err) {
+        console.log(err);
+    }
 }
