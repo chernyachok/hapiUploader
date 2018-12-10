@@ -4,13 +4,15 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test" : "mocha || true"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "chai": "^4.2.0",
     "dotenv": "^6.2.0",
     "fs-extra": "^7.0.1",
     "hapi": "^17.8.1",
@@ -20,5 +22,8 @@
     "lowdb": "^1.0.0",
     "node-fetch": "^2.3.0",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }
