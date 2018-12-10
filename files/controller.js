@@ -1,5 +1,5 @@
 const fileSystem = require('./fileSystem');
-const axios = require('axios');
+const config = require('../configurations/config.dev.json');
 
 const handleFileUpload = async file => {
     const fileName = file.hapi.filename;
@@ -11,11 +11,7 @@ const handleFileUpload = async file => {
 
     await fileSystem.writeFile(fileName, data);
 
-    const parsedList = await fileSystem.readJson();
-    
-    parsedList.files.push({ id: new Date().getTime(), src: fileName });
-
-    await fileSystem.writeJson(parsedList);
+    fileSystem.setFileLow({id: new Date().getTime(), fileName});
     return {message: 'saved succcesfully'};
 }
 
@@ -25,41 +21,28 @@ module.exports.fileUpload = async (req, h) => {
     return h.response(response);
 }
 
-module.exports.getListOfFiles = async (req, h) => {
-        const parsedList = await fileSystem.readJson()
-        return h.response(parsedList.files);
+module.exports.getListOfFiles = (req, h) => {
+        const files = fileSystem.getFilesLow()
+        return h.response(files);
 }
 
 module.exports.fileDelete = async (req, h) => {
     const { fileToBeDeleted } = req.payload;
 
     await fileSystem.removeFile(fileToBeDeleted);
-    let parsedList = await fileSystem.readJson();
-    parsedList.files = parsedList.files.filter(item => item.src !== fileToBeDeleted);
-    await fileSystem.writeJson(parsedList);
+    fileSystem.removeFileLow(fileToBeDeleted);
 
     return {message: 'deleted successfully'};
 }
 
 module.exports.mainPage = async (req, h) => {
     try {
-        const { data } = await axios.get('http://localhost:8000/files');
-        let files = '<tr><th>id</th><th>filename</th></tr>';
-        data.length && data.forEach(item => {
-           files += `
-            <tr>
-                <td>${item.id}</td>
-                <td><a href='http://localhost:8000/files/${item.src}'}>${item.src}</a></td>
-            </tr>
-           `;
-        });
-        return h.response(`
-            <table>
-                ${files}
-            </table>
-        `)
-        .type('text/html')
-        .code(200);
+        const data = await fileSystem.getApi(`${config.workingDir}/files`);
+        const files = fileSystem.getViewOfAllFiles(data);
+        
+        return h.response(files)
+            .type('text/html')
+            .code(200);
     } catch (err) {
         console.log(err);
     }
