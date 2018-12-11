@@ -1,7 +1,4 @@
-const currentHost = process.env.HOST;
-const currentPort = process.env.PORT;
-
-const workingUrl = (additional) => 
-    'http://' + currentHost + ':' +currentPort + (additional ? additional : '');
+const workingUrl = (additional = '') => 
+    'http://' + process.env.HOST + ':' + process.env.PORT + additional;
 
 module.exports = workingUrl;

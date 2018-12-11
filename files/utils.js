@@ -5,7 +5,7 @@ exports.getApi = async (url) => {
     return data;
 }
 
-exports.getViewOfAllFiles = data => {
+exports.getHtmlString = data => {
     let files = '';
         data.length && data.forEach((item, index) => {
            if (index === 0) {

@@ -1,49 +1,66 @@
 const expect = require("chai").expect;
 const fs = require('fs');
+const FormData = require('form-data');
+const streamToPromise = require('stream-to-promise')
 const startServer = require('../init');
-const workingUrl = require('../../utils/workingUrl');
+const data = require('../mocks/data');
 
 describe('app', () => {
 
     let server = undefined;
-    
+    let url = undefined;
+
     const getAllFiles = async () => 
         server.inject({
             method: 'GET',
-            url: 'http://localhost:8000' + '/files',
+            url: url + '/files',
         })
     
-    const uploadFile = async () =>  {
-        // console.log(workingUrl)
+    const uploadFile = async (payload, headers) => 
         server.inject({
             method: 'POST',
-            url: 'http://localhost:8000' + '/files',
-            payload: {
-                file: fs.createReadStream(process.cwd() + '/test/mocks/php.png')
-            }
+            url: url + '/files',
+            payload,
+            headers
         })
-    }
-        
-    
+
+    const deleteFile = async (payload) => 
+        server.inject({
+            method: 'DELETE',
+            url: url + '/files',
+            payload
+        })
     
     before(async () => {
-        server = await startServer();
+        ({server, url} = await startServer());
     })
 
-    it('GET /files - Should return list of all files', async () => {
+    it('GET /files - Should return list of all files and return 200', async () => {
         const response = await getAllFiles()
         const parsedPayload = JSON.parse(response.payload);
         expect(response.statusCode).to.equal(200);
         expect(parsedPayload).to.be.an("array");
     })
 
-    it('POST /files -Should upload valid file', async () => {
-           const response = await uploadFile();
-           console.log(response);
+    it('POST /files -Should upload file and return 200', async () => {
+        const fileStream =  fs.createReadStream(process.cwd() + '/test/mocks/' + data.fileName)
+        const form = new FormData();
+        form.append('file', fileStream);
+        const payload = await streamToPromise(form);
+        const headers = form.getHeaders();
+
+        const response = await uploadFile(payload, headers);
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(response.statusCode).to.equal(200);
+        expect(parsedPayload).to.have.property("message");
     })
 
-    // it('DELETE /files - Should delete a certain file', async () => {
-    //     const response = await deleteFile({fileToBeDeleted: 'ruby.png'});
-    //     expect(response.statusCode).to.equal(200);
-    // })
+    it('DELETE /files - Should delete a certain file', async () => {
+        const response = await deleteFile({fileToBeDeleted: data.fileName});
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(response.statusCode).to.equal(200);
+        expect(parsedPayload).to.have.property("message");
+    })
 })

@@ -44,11 +44,11 @@ exports.fileDelete = async (req, h) => {
     return {message: 'deleted successfully'};
 }
 
-exports.mainPage = async (req, h) => {
+exports.getViewOfListOfFiles = async (req, h) => {
     try {
         const url = workingUrl('/files');
         const data = await utils.getApi(url);
-        const files = utils.getViewOfAllFiles(data);
+        const files = utils.getHtmlString(data);
         
         return h.response(files)
             .type('text/html')

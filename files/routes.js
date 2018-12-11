@@ -6,7 +6,7 @@ module.exports = async (server) => {
     server.route({
         method: 'GET',
         path: '/main',
-        handler: fileController.mainPage
+        handler: fileController.getViewOfListOfFiles
     })
 
     server.route({
