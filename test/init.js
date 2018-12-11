@@ -1,8 +1,9 @@
 const initServer = require('../server/initServer');
 const initRoutes = require('../files/routes');
+const workingUrl = require('../utils/workingUrl');
 
 require('dotenv').config();
-
+console.log('CURRENT PORT', process.env.PORT, workingUrl);
 const start = async () => {
     try {
         const server = await initServer();

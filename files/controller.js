@@ -1,5 +1,5 @@
 const fileSystem = require('./fileSystem');
-const workingDir = require('../utils/workingUrl');
+const workingUrl = require('../utils/workingUrl');
 const dbService = require('./dbService');
 const utils = require('./utils');
 
@@ -12,11 +12,11 @@ const handleFileUpload = async file => {
         return {message: 'such file exist'};
 
     await fileSystem.writeFile(fileName, data);
-
+    const url = workingUrl('/files/' + fileName);
     dbService.setFileLow({
         id: new Date().getTime(),
         fileName,
-        url: workingDir + '/files/' + fileName 
+        url 
     });
     return {message: 'saved succcesfully'};
 }
@@ -46,7 +46,8 @@ exports.fileDelete = async (req, h) => {
 
 exports.mainPage = async (req, h) => {
     try {
-        const data = await utils.getApi(`${workingDir}/files`);
+        const url = workingUrl('/files');
+        const data = await utils.getApi(url);
         const files = utils.getViewOfAllFiles(data);
         
         return h.response(files)

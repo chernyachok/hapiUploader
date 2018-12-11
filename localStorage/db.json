@@ -1,3 +1,9 @@
 {
-  "files": []
+  "files": [
+    {
+      "id": 1544545232722,
+      "fileName": "js.png",
+      "url": "http://localhost:8000/files/js.png"
+    }
+  ]
 }

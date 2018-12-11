@@ -1,6 +1,7 @@
 const expect = require("chai").expect;
+const fs = require('fs');
 const startServer = require('../init');
-const config = require('../../configurations/config.dev.json');
+const workingUrl = require('../../utils/workingUrl');
 
 describe('app', () => {
 
@@ -9,23 +10,21 @@ describe('app', () => {
     const getAllFiles = async () => 
         server.inject({
             method: 'GET',
-            url: config.workingDir + '/files',
+            url: 'http://localhost:8000' + '/files',
         })
     
-    const uploadFile = async (payload, headers) => 
-    server.inject({
-        method: 'POST',
-        url: config.workingDir + '/files',
-        payload,
-        headers
-    })
+    const uploadFile = async () =>  {
+        // console.log(workingUrl)
+        server.inject({
+            method: 'POST',
+            url: 'http://localhost:8000' + '/files',
+            payload: {
+                file: fs.createReadStream(process.cwd() + '/test/mocks/php.png')
+            }
+        })
+    }
+        
     
-    // const deleteFile = async payload =>
-    //     server.inject({
-    //         method: 'DELETE',
-    //         url: config.workingDir + '/files',
-    //         payload 
-    //     })
     
     before(async () => {
         server = await startServer();
@@ -39,7 +38,8 @@ describe('app', () => {
     })
 
     it('POST /files -Should upload valid file', async () => {
-
+           const response = await uploadFile();
+           console.log(response);
     })
 
     // it('DELETE /files - Should delete a certain file', async () => {
