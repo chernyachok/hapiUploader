@@ -1,9 +1,8 @@
 const expect = require("chai").expect;
-const fs = require('fs');
-const FormData = require('form-data');
 const streamToPromise = require('stream-to-promise')
 const startServer = require('../init');
-const data = require('../mocks/data');
+const {fileNames} = require('../mocks/data');
+const {createFormData, appendFiles} = require('../utils');
 
 describe('app', () => {
 
@@ -43,11 +42,11 @@ describe('app', () => {
     })
 
     it('POST /files -Should upload file and return 200', async () => {
-        const fileStream =  fs.createReadStream(process.cwd() + '/test/mocks/' + data.fileName)
-        const form = new FormData();
-        form.append('file', fileStream);
-        const payload = await streamToPromise(form);
-        const headers = form.getHeaders();
+        const formData = createFormData();
+        appendFiles(formData, fileNames);
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
 
         const response = await uploadFile(payload, headers);
         const parsedPayload = JSON.parse(response.payload);
@@ -57,7 +56,7 @@ describe('app', () => {
     })
 
     it('DELETE /files - Should delete a certain file', async () => {
-        const response = await deleteFile({fileToBeDeleted: data.fileName});
+        const response = await deleteFile({fileToBeDeleted: fileNames[0]});
         const parsedPayload = JSON.parse(response.payload);
 
         expect(response.statusCode).to.equal(200);

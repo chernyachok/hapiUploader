@@ -1,1 +1,1 @@
-module.exports.fileName = 'elephant.png';
+module.exports.fileNames = ['elephant.png'];
