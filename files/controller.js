@@ -1,5 +1,7 @@
 const fileSystem = require('./fileSystem');
-const config = require('../configurations/config.dev.json');
+const workingDir = require('../utils/workingUrl');
+const dbService = require('./dbService');
+const utils = require('./utils');
 
 const handleFileUpload = async file => {
     const fileName = file.hapi.filename;
@@ -11,34 +13,41 @@ const handleFileUpload = async file => {
 
     await fileSystem.writeFile(fileName, data);
 
-    fileSystem.setFileLow({id: new Date().getTime(), fileName});
+    dbService.setFileLow({
+        id: new Date().getTime(),
+        fileName,
+        url: workingDir + '/files/' + fileName 
+    });
     return {message: 'saved succcesfully'};
 }
 
-module.exports.fileUpload = async (req, h) => {
+exports.fileUpload = async (req, h) => {
     const { file } = req.payload;
     const response = await handleFileUpload(file);
     return h.response(response);
 }
 
-module.exports.getListOfFiles = (req, h) => {
-        const files = fileSystem.getFilesLow()
+exports.getListOfFiles = (req, h) => {
+        const files = dbService.getFilesLow()
         return h.response(files);
 }
 
-module.exports.fileDelete = async (req, h) => {
+exports.fileDelete = async (req, h) => {
     const { fileToBeDeleted } = req.payload;
-
+    const isExist = dbService.findFileLow(fileToBeDeleted);
+    if(!isExist) {
+        return { message: 'no such file exist' };
+    }
     await fileSystem.removeFile(fileToBeDeleted);
-    fileSystem.removeFileLow(fileToBeDeleted);
+    dbService.removeFileLow(fileToBeDeleted);
 
     return {message: 'deleted successfully'};
 }
 
-module.exports.mainPage = async (req, h) => {
+exports.mainPage = async (req, h) => {
     try {
-        const data = await fileSystem.getApi(`${config.workingDir}/files`);
-        const files = fileSystem.getViewOfAllFiles(data);
+        const data = await utils.getApi(`${workingDir}/files`);
+        const files = utils.getViewOfAllFiles(data);
         
         return h.response(files)
             .type('text/html')

@@ -9,13 +9,22 @@ describe('app', () => {
     const getAllFiles = async () => 
         server.inject({
             method: 'GET',
-            url: config.workingDir + '/files'
+            url: config.workingDir + '/files',
         })
     
-    // const deleteFile = async () =>
+    const uploadFile = async (payload, headers) => 
+    server.inject({
+        method: 'POST',
+        url: config.workingDir + '/files',
+        payload,
+        headers
+    })
+    
+    // const deleteFile = async payload =>
     //     server.inject({
     //         method: 'DELETE',
-    //         url: config.workingDir + '/files'
+    //         url: config.workingDir + '/files',
+    //         payload 
     //     })
     
     before(async () => {
@@ -29,7 +38,12 @@ describe('app', () => {
         expect(parsedPayload).to.be.an("array");
     })
 
-    it('DELETE /files - Should delete a certain file', async () => {
+    it('POST /files -Should upload valid file', async () => {
 
     })
+
+    // it('DELETE /files - Should delete a certain file', async () => {
+    //     const response = await deleteFile({fileToBeDeleted: 'ruby.png'});
+    //     expect(response.statusCode).to.equal(200);
+    // })
 })
