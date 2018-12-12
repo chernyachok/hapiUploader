@@ -55,7 +55,7 @@ describe('app', () => {
         expect(parsedPayload).to.have.property("message");
     })
 
-    it('DELETE /files - Should delete a certain file', async () => {
+    it('DELETE /files - Should delete a certain file and return 200', async () => {
         const response = await deleteFile({fileToBeDeleted: fileNames[0]});
         const parsedPayload = JSON.parse(response.payload);
 

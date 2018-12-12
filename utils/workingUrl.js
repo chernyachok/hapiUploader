@@ -1,4 +1,6 @@
+const { protocol, host, port } = require('../configurations').getServerConfigs()
+
 const workingUrl = (additional = '') => 
-    'http://' + process.env.HOST + ':' + process.env.PORT + additional;
+    protocol + '://' + host + ':' + port + additional;
 
 module.exports = workingUrl;
