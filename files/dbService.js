@@ -1,4 +1,5 @@
-const db = require('../lowDbConnect');
+const { dbName } = require('../configurations').getServerConfigs();
+const db = require('../lowDbConnect')(dbName);
 
 const getFilesLow = () => db.get('files').value();
 

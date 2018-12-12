@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(process.cwd(), ".env.test") });
 const initServer = require('../server/initServer');
 const initRoutes = require('../files/routes');
 const workingUrl = require('../utils/workingUrl');

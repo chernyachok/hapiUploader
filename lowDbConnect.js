@@ -1,7 +1,12 @@
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
-const adapter = new FileSync('localStorage/db.json');
-const db = low(adapter);
-db.defaults({ files: [] }).write();
 
-module.exports = db;
+function initializeDb(dbName) {
+    const adapter = new FileSync(`localStorage/${dbName}.json`);
+    const db = low(adapter);
+    db.defaults({ files: [] }).write();
+
+    return db;
+}
+
+module.exports = initializeDb;
