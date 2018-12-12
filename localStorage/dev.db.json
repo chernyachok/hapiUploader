@@ -2,8 +2,13 @@
   "files": [
     {
       "id": 1544623247733,
-      "fileName": "js.png",
-      "url": "http://localhost:8000/files/js.png"
+      "fileName": "jsx2.png",
+      "url": "http://localhost:8000/files/jsx2.png"
+    },
+    {
+      "id": 1544629702937,
+      "fileName": "favicon.ico",
+      "url": "http://localhost:8000/files/favicon.ico"
     }
   ]
 }

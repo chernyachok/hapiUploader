@@ -28,8 +28,15 @@ exports.fileUpload = async (req, h) => {
 }
 
 exports.getListOfFiles = (req, h) => {
-        const files = dbService.getFilesLow()
+        const files = dbService.getFilesLow();
         return h.response(files);
+}
+
+exports.fileUpdate = async (req, h) => {
+    const {fileToBeUpdated, newFilename} = req.payload;
+    const newUrl = workingUrl('/files/' + newFilename);
+    dbService.updateFileLow(fileToBeUpdated, newFilename, newUrl);
+    return {message: 'updated successfully'}
 }
 
 exports.fileDelete = async (req, h) => {

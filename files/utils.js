@@ -14,11 +14,11 @@ exports.getHtmlString = data => {
                 keysArr.push(key);
                }
                keysArr.forEach((item2, index2) => {
-                   index2 === 0 ? files = '<tr>': undefined
+                   index2 === 0 ? files = '<tr>': undefined;
             
-                   files += `<th>${item2}</th>`
+                   files += `<th>${item2}</th>`;
 
-                   index2 === (keysArr.length-1)? files += '</tr>' : undefined
+                   index2 === (keysArr.length-1)? files += '</tr>' : undefined;
                })
            }
            files += `
@@ -30,5 +30,5 @@ exports.getHtmlString = data => {
            `;
         });
     
-    return files ? `<table>${files}</table>` : '<h4>No files available!</h4>'
+    return files ? `<table>${files}</table>` : '<h4>No files available!</h4>';
 }

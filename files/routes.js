@@ -30,6 +30,17 @@ module.exports = async (server) => {
     })
 
     server.route({
+        method: 'PUT',
+        path: '/files',
+        options: {
+            handler: fileController.fileUpdate,
+            payload: {
+                output: 'stream'
+            }
+        }
+    })
+
+    server.route({
         method: 'DELETE',
         path: '/files',
         options: {

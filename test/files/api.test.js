@@ -1,5 +1,5 @@
 const expect = require("chai").expect;
-const streamToPromise = require('stream-to-promise')
+const streamToPromise = require('stream-to-promise');
 const startServer = require('../init');
 const {validFileNames, largeFileNames} = require('../mocks/data');
 const {createFormData, appendFiles} = require('../utils');
@@ -35,7 +35,7 @@ describe('app', () => {
     })
 
     it('GET /files - Should return list of all files and return 200', async () => {
-        const response = await getAllFiles()
+        const response = await getAllFiles();
         const parsedPayload = JSON.parse(response.payload);
         expect(response.statusCode).to.equal(200);
         expect(parsedPayload).to.be.an("array");
