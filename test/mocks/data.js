@@ -1,1 +1,2 @@
-module.exports.fileNames = ['elephant.png'];
+exports.validFileNames = ['elephant.png'];
+exports.largeFileNames = ['large.jpg'];

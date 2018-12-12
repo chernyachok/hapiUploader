@@ -1,7 +1,7 @@
 const expect = require("chai").expect;
 const streamToPromise = require('stream-to-promise')
 const startServer = require('../init');
-const {fileNames} = require('../mocks/data');
+const {validFileNames, largeFileNames} = require('../mocks/data');
 const {createFormData, appendFiles} = require('../utils');
 
 describe('app', () => {
@@ -43,7 +43,7 @@ describe('app', () => {
 
     it('POST /files -Should upload file and return 200', async () => {
         const formData = createFormData();
-        appendFiles(formData, fileNames);
+        appendFiles(formData, validFileNames);
 
         const payload = await streamToPromise(formData);
         const headers = formData.getHeaders();
@@ -56,10 +56,22 @@ describe('app', () => {
     })
 
     it('DELETE /files - Should delete a certain file and return 200', async () => {
-        const response = await deleteFile({fileToBeDeleted: fileNames[0]});
+        const response = await deleteFile({fileToBeDeleted: validFileNames[0]});
         const parsedPayload = JSON.parse(response.payload);
 
         expect(response.statusCode).to.equal(200);
         expect(parsedPayload).to.have.property("message");
+    })
+
+    it('POST /files - Should download file with too large size, returns 413', async () => {
+        const formData = createFormData();
+        appendFiles(formData, largeFileNames);
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadFile(payload, headers);
+        
+        expect(response.statusCode).to.equal(413);
     })
 })

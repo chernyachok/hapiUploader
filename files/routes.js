@@ -1,5 +1,6 @@
 const validator = require('./validator');
 const fileController = require('./controller');
+const config = require('../configurations/config.dev.json');
 
 module.exports = async (server) => {
 
@@ -46,6 +47,7 @@ module.exports = async (server) => {
             handler: fileController.fileUpload,
             payload: {
                 output: 'stream',
+                maxBytes: config.server.fileMaxSize
             },
         }
     })
