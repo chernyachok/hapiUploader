@@ -34,9 +34,6 @@ module.exports = async (server) => {
         path: '/files',
         options: {
             handler: fileController.fileUpdate,
-            payload: {
-                output: 'stream'
-            }
         }
     })
 

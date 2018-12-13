@@ -34,6 +34,8 @@ exports.getListOfFiles = (req, h) => {
 
 exports.fileUpdate = async (req, h) => {
     const {fileToBeUpdated, newFilename} = req.payload;
+    await fileSystem.renameFile(fileToBeUpdated, newFilename);
+
     const newUrl = workingUrl('/files/' + newFilename);
     dbService.updateFileLow(fileToBeUpdated, newFilename, newUrl);
     return {message: 'updated successfully'}

@@ -1,7 +1,7 @@
 const expect = require("chai").expect;
 const streamToPromise = require('stream-to-promise');
 const startServer = require('../init');
-const {validFileNames, largeFileNames} = require('../mocks/data');
+const {validFileNames, largeFileNames, updFile} = require('../mocks/data');
 const {createFormData, appendFiles} = require('../utils');
 
 describe('app', () => {
@@ -21,6 +21,13 @@ describe('app', () => {
             url: url + '/files',
             payload,
             headers
+        })
+    
+    const updateFile = async (payload) => 
+        server.inject({
+            method: 'PUT',
+            url: url + '/files',
+            payload
         })
 
     const deleteFile = async (payload) => 
@@ -55,8 +62,15 @@ describe('app', () => {
         expect(parsedPayload).to.have.property("message");
     })
 
+    it('PUT /files - Should update name of a certain file', async () => {
+        const response = await updateFile(updFile);
+        
+        expect(response.statusCode).to.equal(200);
+        expect(response.request.payload).to.include(updFile);
+    })
+
     it('DELETE /files - Should delete a certain file and return 200', async () => {
-        const response = await deleteFile({fileToBeDeleted: validFileNames[0]});
+        const response = await deleteFile({fileToBeDeleted: updFile.newFilename});
         const parsedPayload = JSON.parse(response.payload);
 
         expect(response.statusCode).to.equal(200);
@@ -74,4 +88,5 @@ describe('app', () => {
         
         expect(response.statusCode).to.equal(413);
     })
+
 })
