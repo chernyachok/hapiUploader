@@ -25,6 +25,7 @@
     "node-fetch": "^2.3.0",
     "path": "^0.12.7",
     "sequelize": "^4.42.0",
+    "stream": "0.0.2",
     "stream-to-promise": "^2.2.0"
   },
   "devDependencies": {

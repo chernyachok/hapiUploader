@@ -24,7 +24,7 @@ exports.getHtmlString = data => {
            files += `
             <tr>
                 <td>${item.id}</td>
-                <td>${item.fileName}</td>
+                <td>${item.filename}</td>
                 <td><a href='${item.url}'>${item.url}</a></td>
             </tr>
            `;

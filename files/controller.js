@@ -31,7 +31,7 @@ class FileController {
 
     async getListOfFiles(req, h) {
         const files = await this._fileModel.findAll();
-        return h.response(files);
+        return h.response(files).code(200);
     }
 
     async getViewOfListOfFiles(req, h) {
