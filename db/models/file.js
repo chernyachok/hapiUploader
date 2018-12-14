@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = (connection) => {
+module.exports = async (connection) => {
     const File = connection.define('file', {
         id: {
             type: Sequelize.INTEGER,
@@ -16,7 +16,9 @@ module.exports = (connection) => {
             type: Sequelize.STRING,
             allowNull: false
         }
+    }, {
+        timestamps: false
     });
-    
+    await File.sync();
     return File;
 }

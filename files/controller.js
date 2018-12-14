@@ -12,7 +12,7 @@ class FileController {
         this.handleFileUpload = this.handleFileUpload.bind(this);
     }
     //private
-    async handleFileUpload(file) {
+    async handleFileUpload (file) {
         const {filename} = file.hapi;
         const data = file._data;
     
