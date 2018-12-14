@@ -21,8 +21,10 @@
     "inert": "^5.1.2",
     "joi": "^14.3.0",
     "lowdb": "^1.0.0",
+    "mysql2": "^1.6.4",
     "node-fetch": "^2.3.0",
     "path": "^0.12.7",
+    "sequelize": "^4.42.0",
     "stream-to-promise": "^2.2.0"
   },
   "devDependencies": {

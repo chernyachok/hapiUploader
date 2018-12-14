@@ -1,9 +1,11 @@
 const validator = require('./validator');
-const fileController = require('./controller');
 const config = require('../configurations/config.dev.json');
+const path = require('path');
 
-module.exports = async (server) => {
+const publicImgsPath = path.join(process.cwd(), 'public', 'imgs');
 
+module.exports = async (server, fileController) => {
+    
     server.route({
         method: 'GET',
         path: '/main',
@@ -24,7 +26,7 @@ module.exports = async (server) => {
         path: '/files/{filename}',
         handler: {
             directory: {
-                path: (process.cwd() + '/public/imgs')
+                path: publicImgsPath
             }
         }
     })
@@ -33,7 +35,10 @@ module.exports = async (server) => {
         method: 'PUT',
         path: '/files',
         options: {
-            handler: fileController.fileUpdate,
+            handler: fileController.updateFile,
+            validate: {
+                payload: validator.updateValidator
+            }
         }
     })
 
@@ -41,7 +46,7 @@ module.exports = async (server) => {
         method: 'DELETE',
         path: '/files',
         options: {
-            handler: fileController.fileDelete,
+            handler: fileController.deleteFile,
             validate: {
                 payload: validator.deleteValidator
             }
@@ -52,11 +57,14 @@ module.exports = async (server) => {
         method: 'POST',
         path: '/files',
         options: {
-            handler: fileController.fileUpload,
+            handler: fileController.uploadFile,
             payload: {
                 output: 'stream',
                 maxBytes: config.server.fileMaxSize
             },
+            validate: {
+                payload: validator.uploadFileValidator
+            }
         }
     })
 

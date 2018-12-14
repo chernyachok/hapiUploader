@@ -1,68 +1,87 @@
 const fileSystem = require('./fileSystem');
 const workingUrl = require('../utils/workingUrl');
-const dbService = require('./dbService');
 const utils = require('./utils');
 
-const handleFileUpload = async file => {
-    const fileName = file.hapi.filename;
-    const data = file._data;
+class FileController {
+    constructor(fileModel) {
+        this._fileModel = fileModel;
+        this.getListOfFiles = this.getListOfFiles.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
+        this.updateFile = this.updateFile.bind(this);
+        this.deleteFile = this.deleteFile.bind(this);
+        this.handleFileUpload = this.handleFileUpload.bind(this);
+    }
+    //private
+    async handleFileUpload(file) {
+        const {filename} = file.hapi;
+        const data = file._data;
+    
+        const isExist = fileSystem.isExist(filename);
+        if(isExist)
+            return {message: 'such file exist'};
+    
+        await fileSystem.writeFile(filename, data);
+        const url = workingUrl('/files/' + filename);
+        await this._fileModel.create({
+           filename,
+           url 
+        });
+        return {message: 'file uploaded succcesfully'};
+    }
 
-    const isExist = fileSystem.isExist(fileName);
-    if(isExist)
-        return {message: 'such file exist'};
-
-    await fileSystem.writeFile(fileName, data);
-    const url = workingUrl('/files/' + fileName);
-    dbService.setFileLow({
-        id: new Date().getTime(),
-        fileName,
-        url 
-    });
-    return {message: 'saved succcesfully'};
-}
-
-exports.fileUpload = async (req, h) => {
-    const { file } = req.payload;
-    const response = await handleFileUpload(file);
-    return h.response(response);
-}
-
-exports.getListOfFiles = (req, h) => {
-        const files = dbService.getFilesLow();
+    async getListOfFiles(req, h) {
+        const files = await this._fileModel.findAll();
         return h.response(files);
-}
-
-exports.fileUpdate = async (req, h) => {
-    const {fileToBeUpdated, newFilename} = req.payload;
-    await fileSystem.renameFile(fileToBeUpdated, newFilename);
-
-    const newUrl = workingUrl('/files/' + newFilename);
-    dbService.updateFileLow(fileToBeUpdated, newFilename, newUrl);
-    return {message: 'updated successfully'}
-}
-
-exports.fileDelete = async (req, h) => {
-    const { fileToBeDeleted } = req.payload;
-    const isExist = dbService.findFileLow(fileToBeDeleted);
-    if(!isExist) {
-        return { message: 'no such file exist' };
     }
-    await fileSystem.removeFile(fileToBeDeleted);
-    dbService.removeFileLow(fileToBeDeleted);
 
-    return {message: 'deleted successfully'};
-}
-
-exports.getViewOfListOfFiles = async (req, h) => {
-    try {
-        const url = workingUrl('/files');
-        const data = await utils.getApi(url);
-        const files = utils.getHtmlString(data);
-        
-        return h.response(files)
-            .type('text/html')
-            .code(200);
-    } catch (err) {
-        console.log(err);
+    async getViewOfListOfFiles(req, h) {
+        try {
+            const url = workingUrl('/files');
+            const data = await utils.getApi(url);
+            const files = utils.getHtmlString(data);
+            
+            return h.response(files)
+                .type('text/html')
+                .code(200);
+        } catch (err) {
+            console.log(err);
+        }
     }
-}
+
+    async uploadFile(req, h) {
+        const { file } = req.payload;
+        const response = await this.handleFileUpload(file);
+        return h.response(response).code(201);
+    }
+
+    async updateFile(req, h) {
+        const {id, newFilename} = req.payload;
+        const response = await this._fileModel.findOne({where: {id}});
+
+        if(response === null) {
+            return h.response({ message: 'no file with such id exist' });
+        }
+
+        await fileSystem.renameFile(response.dataValues.filename, newFilename);
+
+        const newUrl = workingUrl('/files/' + newFilename);
+        await this._fileModel.update({filename: newFilename, url: newUrl}, {where: {id}});
+        return h.response({message: 'updated successfully'}).code(200);
+    }
+    
+    async deleteFile(req, h) {
+        const { id } = req.payload;
+        const response = await this._fileModel.findOne({where: {id}});
+
+        if(response === null) {
+            return h.response({ message: 'no file with such id exist' });
+        }
+
+        await fileSystem.removeFile(response.dataValues.filename);
+        await this._fileModel.destroy({where: {id}});
+    
+        return h.response({message: 'deleted successfully'}).code(200);
+    }
+} 
+
+module.exports = FileController;

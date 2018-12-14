@@ -1,7 +1,13 @@
-exports.validFileNames = ['elephant.png'];
-exports.largeFileNames = ['large.jpg'];
+const validFileNames = ['elephant.png'];
+const largeFileNames = ['large.jpg'];
 
-exports.updFile = {
+const updFile = {
     fileToBeUpdated: 'elephant.png',
     newFilename: 'elephant1.png'
+}
+
+module.exports = {
+    validFileNames,
+    largeFileNames,
+    updFile
 }
