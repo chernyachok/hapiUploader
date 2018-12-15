@@ -6,13 +6,13 @@ const imgsDir = path.join(process.cwd(), 'public/imgs');
 const isExist = (fileName) => 
     fs.existsSync(path.join(imgsDir, fileName));
 
-const writeFile = (fileName, data) =>
+const writeFile = async (fileName, data) =>
     fs.writeFile(path.join(imgsDir, fileName), data);
 
-const removeFile = (fileToBeDeleted) =>
+const removeFile = async (fileToBeDeleted) =>
     fs.remove(path.join(imgsDir, fileToBeDeleted));
 
-const renameFile = (oldFileName, newFileName) =>
+const renameFile = async (oldFileName, newFileName) =>
     fs.rename(path.join(imgsDir, oldFileName), path.join(imgsDir, newFileName));
 
 module.exports = {

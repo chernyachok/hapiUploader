@@ -1,9 +1,14 @@
 const Sequalize = require('sequelize');
-const { dbName, dbUser, dbUserPass, dbDialect } = require('../configurations').getServerConfigs();
 
-const initDb = async () => {
+const initDb = async (serverConfigs) => {
+    const { dbName, dbUser, dbUserPass, dbDialect } = serverConfigs;
         const connection = new Sequalize(dbName, dbUser, dbUserPass, {
-            dialect: dbDialect
+            dialect: dbDialect,
+            define: {
+                freezeTableName: true,
+                timestamps: false
+            },
+            logging: false
         });   
         await connection.authenticate();
         return connection;

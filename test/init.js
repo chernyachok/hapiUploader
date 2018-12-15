@@ -1,20 +1,27 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(process.cwd(), ".env.test") });
+const dotenv = require('dotenv');
+dotenv.config({path: path.join(process.cwd(), '.env.test')});
+
 const initServer = require('../server/initServer');
-const initRoutes = require('../files/routes');
+const initApi = require('../files');
+const initDb = require('../db/initDb');
 const workingUrl = require('../utils/workingUrl');
+
+const { getServerConfigs } = require('../configurations');
 
 const start = async () => {
     try {
-        const server = await initServer();
-        await initRoutes(server);
+        const serverConfigs = getServerConfigs();
+        const server = await initServer(serverConfigs);
+        const connectionDb = await initDb(serverConfigs);
+        await initApi(server, connectionDb);
         await server.start();
-        console.log('server started at', server.info.uri);
         const url = workingUrl();
-
-        return {server, url}; 
+        console.log('server started at', server.info.uri);
+        console.log('Connection to the database has been established successfully.');
+        return {server, url, connectionDb}; 
     } catch (err) {
-        console.log('CANT LAUNCH SERVER', err);
+        console.log('cant launch server or db', err);
         process.exit(1);
     }
 }

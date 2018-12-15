@@ -1,11 +1,11 @@
 const Hapi = require('hapi');
 const inert = require('inert');
 
-const initServer = async () => {
-
+const initServer = async (serverConfigs) => {
+    const {port, host} = serverConfigs;
     const server = Hapi.server({
-        port: process.env.PORT || 3000,
-        host: process.env.HOST || 'localhost',
+        port,
+        host,
         // router: {
         //     stripTrailingSlash: true
         // }

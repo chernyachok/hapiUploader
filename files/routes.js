@@ -1,13 +1,10 @@
 const validator = require('./validator');
 const config = require('../configurations/config.dev.json');
 const path = require('path');
-const File = require('../db/models/file');
-const FileController = require('./controller');
+
 const publicImgsPath = path.join(process.cwd(), 'public', 'imgs');
 
-module.exports = async (server, connection) => {
-    const fileModel = await File(connection);
-    fileController = new FileController(fileModel);
+module.exports = async (server, fileController) => {
 
     server.route({
         method: 'GET',

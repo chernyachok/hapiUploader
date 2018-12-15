@@ -1,12 +1,12 @@
 const initServer = require('./initServer');
-const initRoutes = require('../files/routes');
-const initConnection = require('../db/initDb');
+const initApi = require('../files');
+const initDb = require('../db/initDb');
 
-const start = async () => {
+const start = async (serverConfigs) => {
     try {
-        const server = await initServer();
-        const connection = await initConnection();
-        await initRoutes(server, connection);
+        const server = await initServer(serverConfigs);
+        const connection = await initDb(serverConfigs);
+        await initApi(server, connection);
         await server.start();
         console.log(`server start at ${server.info.uri}`);
         console.log('Connection to the database has been established successfully.');

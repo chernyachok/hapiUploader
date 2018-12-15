@@ -1,4 +1,8 @@
 const dotenv = require('dotenv');
 dotenv.config();
-require('./server')();
+const { getServerConfigs }= require('./configurations');
+
+const serverConfigs = getServerConfigs();
+
+require('./server')(serverConfigs);
 
