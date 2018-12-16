@@ -5,8 +5,8 @@ const initDb = require('../db/initDb');
 const start = async (serverConfigs) => {
     try {
         const server = await initServer(serverConfigs);
-        const connection = await initDb(serverConfigs);
-        await initApi(server, connection);
+        const connectionDb = await initDb(serverConfigs);
+        await initApi(server, connectionDb, serverConfigs.staticF);
         await server.start();
         console.log(`server start at ${server.info.uri}`);
         console.log('Connection to the database has been established successfully.');

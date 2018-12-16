@@ -1,23 +1,28 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const imgsDir = path.join(process.cwd(), 'public/imgs');
+class FileSystem {
+    constructor(staticF) {
+        this._staticF = staticF;
+        this._path = path.join(process.cwd(), 'public');
+    }
 
-const isExist = (fileName) => 
-    fs.existsSync(path.join(imgsDir, fileName));
-
-const writeFile = async (fileName, data) =>
-    fs.writeFile(path.join(imgsDir, fileName), data);
-
-const removeFile = async (fileToBeDeleted) =>
-    fs.remove(path.join(imgsDir, fileToBeDeleted));
-
-const renameFile = async (oldFileName, newFileName) =>
-    fs.rename(path.join(imgsDir, oldFileName), path.join(imgsDir, newFileName));
-
-module.exports = {
-    isExist,
-    writeFile,
-    removeFile,
-    renameFile
+    async writeFile(fileName, data) {
+        fs.writeFile(path.join(this._path, this._staticF, fileName), data);
+    }
+    
+    async removeFile(fileToBeDeleted) {
+        fs.remove(path.join(this._path, this._staticF, fileToBeDeleted));
+    }
+    
+    async renameFile(oldFileName, newFileName) {
+        fs.rename(path.join(this._path, this._staticF, oldFileName), path.join(this._path, this._staticF, newFileName));
+    }
+    
+    isExist(fileName) {
+        return fs.existsSync(path.join(this._path, this._staticF, fileName));
+    } 
+   
 }
+
+module.exports = FileSystem;

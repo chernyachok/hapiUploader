@@ -2,9 +2,7 @@ const validator = require('./validator');
 const config = require('../configurations/config.dev.json');
 const path = require('path');
 
-const publicImgsPath = path.join(process.cwd(), 'public', 'imgs');
-
-module.exports = async (server, fileController) => {
+module.exports = async (server, fileController, staticF) => {
 
     server.route({
         method: 'GET',
@@ -26,7 +24,7 @@ module.exports = async (server, fileController) => {
         path: '/files/{filename}',
         handler: {
             directory: {
-                path: publicImgsPath
+                path: path.join(process.cwd(), 'public', `${staticF}`)
             }
         }
     })
@@ -60,6 +58,7 @@ module.exports = async (server, fileController) => {
             handler: fileController.uploadFile,
             payload: {
                 output: 'stream',
+                allow: "multipart/form-data",
                 maxBytes: config.server.fileMaxSize
             },
             validate: {
@@ -72,7 +71,7 @@ module.exports = async (server, fileController) => {
         method: 'GET',
         path: '/{not_found*}',
         handler: (req, h) => {
-            return h.file('404.html');
+            return h.notFound('Sorry.');
         }
     })
 

@@ -14,7 +14,7 @@ const start = async () => {
         const serverConfigs = getServerConfigs();
         const server = await initServer(serverConfigs);
         const connectionDb = await initDb(serverConfigs);
-        await initApi(server, connectionDb);
+        await initApi(server, connectionDb, serverConfigs.staticF);
         await server.start();
         const url = workingUrl();
         console.log('server started at', server.info.uri);

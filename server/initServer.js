@@ -1,5 +1,6 @@
 const Hapi = require('hapi');
 const inert = require('inert');
+const { boomPlugin } = require('../plugins/boom')
 
 const initServer = async (serverConfigs) => {
     const {port, host} = serverConfigs;
@@ -16,9 +17,12 @@ const initServer = async (serverConfigs) => {
         }
     });
     
-    await server.register({
+    await server.register([{
         plugin: inert
-    });
+    },{
+        plugin: boomPlugin
+    }]);
+
     return server;
 }
 

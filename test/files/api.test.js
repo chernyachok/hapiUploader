@@ -3,6 +3,7 @@ const streamToPromise = require('stream-to-promise');
 const startServer = require('../init');
 const { file } = require('../mocks/data');
 const { createFormData, appendFiles } = require('../utils');
+const { ClientError } = require('../../constants');
 
 describe('app', () => {
 
@@ -67,11 +68,33 @@ describe('app', () => {
         expect(parsedPayload).to.have.property("message");
     })
 
+    it('POST /files -Should upload a file that already exists', async () => {
+        const formData = createFormData();
+        appendFiles(formData, file.filenames.valid);
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadFile(payload, headers);
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(parsedPayload.statusCode).to.equal(400);
+        expect(parsedPayload.message).to.equal(ClientError.fileAlreadyExists);
+    })
+
     it('PUT /files - Should update name of a certain file', async () => {
         const response = await updateFile(file.fileToBeUpd);
         
         expect(response.statusCode).to.equal(200);
         expect(response.request.payload).to.include(file.fileToBeUpd);
+    })
+
+    it('PUT /files - Should update non-existing file', async () => {
+        const response = await updateFile({...file.fileToBeUpd, id: 666});
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(parsedPayload.statusCode).to.equal(400);
+        expect(parsedPayload.message).to.equal(ClientError.fileNotExists);
     })
 
     it('DELETE /files - Should delete a certain file and return 200', async () => {
@@ -80,6 +103,13 @@ describe('app', () => {
 
         expect(response.statusCode).to.equal(200);
         expect(parsedPayload).to.have.property("message");
+    })
+
+    it('DELETE /files - Should delete non-existing file and return 400', async () => {
+        const response = await deleteFile({id: file.badId});
+        const parsedPayload = JSON.parse(response.payload);
+        expect(parsedPayload.statusCode).to.equal(400);
+        expect(parsedPayload.message).to.equal(ClientError.fileNotExists);
     })
 
     it('POST /files - Should download file with too large size, returns 413', async () => {

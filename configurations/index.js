@@ -6,7 +6,8 @@ function getServerConfigs() {
         dbName: process.env.DB_NAME,
         dbUser: process.env.DB_USER,
         dbUserPass: process.env.DB_USER_PASS,
-        dbDialect: process.env.DB_DIALECT
+        dbDialect: process.env.DB_DIALECT,
+        staticF: process.env.STATIC_FOLDER
     }
 }
 
