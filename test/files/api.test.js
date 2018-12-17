@@ -124,7 +124,7 @@ describe('app', () => {
         expect(response.statusCode).to.equal(413);
     })
 
-    it('POST /files - Should download file with invalid file format, returns 400', async () => {
+    it('POST /files - Should download file with invalid file format, returns 422', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames.inValid[1]);
 
@@ -135,7 +135,7 @@ describe('app', () => {
         
         const parsedPayload = JSON.parse(response.payload);
 
-        expect(parsedPayload.statusCode).to.equal(400);
+        expect(parsedPayload.statusCode).to.equal(422);
         expect(parsedPayload.message).to.equal(ClientError.invalidFileFormat);
     })
 

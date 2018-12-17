@@ -11,7 +11,7 @@ const filterFile = (file, allowedFormats) => {
 const createFileValidationHandler = validate => (fieldName, allowedFormats) => (req, h) => {
     const file = req.payload[fieldName];
     if (!validate(file, allowedFormats)) {
-        return h.badRequest(ClientError.invalidFileFormat);
+        return h.badData(ClientError.invalidFileFormat);
     }
     return true;
 }
