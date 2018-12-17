@@ -1,7 +1,7 @@
 const file = {
     filenames: {
         valid: ['elephant.png'],
-        inValid: ['large.jpg']
+        inValid: [['large.jpg'], ['favicon.ico']]
     },
     fileToBeUpd: {
         id: 1,

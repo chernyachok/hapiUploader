@@ -4,9 +4,9 @@ const utils = require('./utils');
 const { ClientError } = require('../constants');
 
 class FileController {
-    constructor(fileModel, staticF) {
+    constructor(fileModel, pathToImgs) {
         this._fileModel = fileModel;
-        this._fileSystem = new FileSystem(staticF);
+        this._fileSystem = new FileSystem(pathToImgs);
     }
     //private
     async handleFileUpload (file, h) {
@@ -26,11 +26,7 @@ class FileController {
             });
             return h.response({message: 'file uploaded succcesfully'}).code(201);
         } catch (err) {
-            if (err.isBoom) {
-                return err;
-            } else {
                 return h.badImplementation();
-            }
         }
     }
 
@@ -39,11 +35,7 @@ class FileController {
             const files = await this._fileModel.findAll();
             return h.response(files).code(200);
         }  catch (err) {
-            if (err.isBoom) {
-                return err;
-            } else {
                 return h.badImplementation();
-            }
         }
     }
 
@@ -57,11 +49,7 @@ class FileController {
                 .type('text/html')
                 .code(200);
         }  catch (err) {
-            if (err.isBoom) {
-                return err;
-            } else {
                 return h.badImplementation();
-            }
         }
     }
 
@@ -85,11 +73,7 @@ class FileController {
             await this._fileModel.update({filename: newFilename, url: newUrl}, {where: {id}});
             return h.response({message: 'updated successfully'}).code(200);
         }  catch (err) {
-            if (err.isBoom) {
-                return err;
-            } else {
                 return h.badImplementation();
-            }
         }
     }
     
@@ -105,11 +89,7 @@ class FileController {
             await this._fileModel.destroy({where: {id}});
             return h.response({message: 'deleted successfully'}).code(200);    
         }  catch (err) {
-            if (err.isBoom) {
-                return err;
-            } else {
                 return h.badImplementation();
-            }
         }
         
     }

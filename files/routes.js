@@ -1,7 +1,8 @@
 const validator = require('./validator');
 const config = require('../configurations/config.dev.json');
 const path = require('path');
-
+const { handleFileValidation } = require('../utils/file');
+const { getImageAllowedFormats } = require('../utils/fileFormat');
 module.exports = async (server, fileController, staticF) => {
 
     server.route({
@@ -15,7 +16,7 @@ module.exports = async (server, fileController, staticF) => {
         path: '/files',
         options: {
             description: 'outputs all files previously uploaded',
-            handler: fileController.getListOfFiles
+            handler: fileController.getListOfFiles,
         }
     })
 
@@ -55,6 +56,12 @@ module.exports = async (server, fileController, staticF) => {
         method: 'POST',
         path: '/files',
         options: {
+            pre: [
+                {
+                    assign: 'file',
+                    method: handleFileValidation('file', getImageAllowedFormats())
+                }
+            ],
             handler: fileController.uploadFile,
             payload: {
                 output: 'stream',

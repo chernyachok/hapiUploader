@@ -114,7 +114,7 @@ describe('app', () => {
 
     it('POST /files - Should download file with too large size, returns 413', async () => {
         const formData = createFormData();
-        appendFiles(formData, file.filenames.inValid);
+        appendFiles(formData, file.filenames.inValid[0]);
 
         const payload = await streamToPromise(formData);
         const headers = formData.getHeaders();
@@ -122,6 +122,21 @@ describe('app', () => {
         const response = await uploadFile(payload, headers);
         
         expect(response.statusCode).to.equal(413);
+    })
+
+    it('POST /files - Should download file with invalid file format, returns 400', async () => {
+        const formData = createFormData();
+        appendFiles(formData, file.filenames.inValid[1]);
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadFile(payload, headers);
+        
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(parsedPayload.statusCode).to.equal(400);
+        expect(parsedPayload.message).to.equal(ClientError.invalidFileFormat);
     })
 
     after(async () => {
