@@ -1,8 +1,5 @@
 const file = {
-    filenames: {
-        valid: ['elephant.png'],
-        inValid: [['large.jpg'], ['favicon.ico']]
-    },
+    filenames: [['elephant.png'] ,['lab_1.doc'], ['large.jpg'], ['favicon.ico'], ['lab_1.odt']],
     fileToBeUpd: {
         id: 1,
         newFilename: 'elephant1.png'

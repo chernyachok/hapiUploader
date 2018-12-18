@@ -1,7 +1,11 @@
 const joi = require('joi');
-const {Readable} = require('stream');
+const { Readable } = require('stream');
 
-module.exports.uploadFileValidator = joi.object().keys({
+module.exports.logoModel = joi.object().keys({
+    logo: joi.object().type(Readable)
+})
+
+module.exports.jobModel = joi.object().keys({
     file: joi.object().type(Readable)
 })
 

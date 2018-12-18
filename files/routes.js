@@ -1,8 +1,8 @@
 const validator = require('./validator');
 const config = require('../configurations/config.dev.json');
 const path = require('path');
-const { handleFileValidation } = require('../utils/file');
-const { getImageAllowedFormats } = require('../utils/fileFormat');
+const { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } = require('./utils');
+
 module.exports = async (server, fileController, staticF) => {
 
     server.route({
@@ -54,22 +54,44 @@ module.exports = async (server, fileController, staticF) => {
 
     server.route({
         method: 'POST',
-        path: '/files',
+        path: '/users/logo',
         options: {
             pre: [
                 {
                     assign: 'file',
-                    method: handleFileValidation('file', getImageAllowedFormats())
+                    method: handleFileValidation('logo', getImageAllowedFormats())
                 }
             ],
-            handler: fileController.uploadFile,
+            handler: fileController.saveLogo,
             payload: {
                 output: 'stream',
                 allow: "multipart/form-data",
                 maxBytes: config.server.fileMaxSize
             },
             validate: {
-                payload: validator.uploadFileValidator
+                payload: validator.logoModel
+            }
+        }
+    })
+
+    server.route({
+        method: 'POST',
+        path: '/users/jobs',
+        options: {
+            pre: [
+                {
+                    assign: 'file',
+                    method: handleFileValidation('file', getDocsAllowedFormats())
+                }
+            ],
+            handler: fileController.saveJob,
+            payload: {
+                output: 'stream',
+                allow: "multipart/form-data",
+                maxBytes: config.server.fileMaxSize
+            },
+            validate: {
+                payload: validator.jobModel
             }
         }
     })

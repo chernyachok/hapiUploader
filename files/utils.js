@@ -1,7 +1,46 @@
 const axios = require('axios');
+const mime = require('mime');
+const { ClientError } = require('../constants');
+
+const { protocol, host, port } = require('../configurations').getServerConfigs();
+
+const isAccepted = (type, allowedFormats) => allowedFormats.some(item => item === type);
+
+const filterFile = file =>  allowedFormats => {
+    const type = mime.getType(file.hapi.filename);
+    return isAccepted(type, allowedFormats);
+}
+
+const createFileValidationHandler = validate => (fieldName, allowedFormats) => (req, h) => {
+    const file = req.payload[fieldName];
+    if (!validate(file, allowedFormats)) {
+        return h.badData(ClientError.invalidFileFormat);
+    }
+    return true;
+}
+
+exports.handleFileValidation = createFileValidationHandler((file, allowedFormats) => filterFile(file)(allowedFormats));
+
+exports.getImageAllowedFormats = () => {
+    return  [
+            "image/png", 
+            "image/jpg", 
+            "image/jpeg"
+        ];
+}
+
+exports.getDocsAllowedFormats = () => {
+    return [
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+}
+
+exports.workingUrl = (additional = '') => 
+    protocol + '://' + host + ':' + port + additional;
 
 exports.getApi = async (url) => {
-    const {data} = await axios.get(url);
+    const { data } = await axios.get(url);
     return data;
 }
 

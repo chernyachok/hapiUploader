@@ -17,10 +17,18 @@ describe('app', () => {
             url: url + '/files',
         });
     
-    const uploadFile = async (payload, headers) => 
+    const uploadLogo = async (payload, headers) => 
         server.inject({
             method: 'POST',
-            url: url + '/files',
+            url: url + '/users/logo',
+            payload,
+            headers
+        });
+    
+    const uploadJob = async (payload, headers) => 
+        server.inject({
+            method: 'POST',
+            url: url + '/users/jobs',
             payload,
             headers
         });
@@ -54,42 +62,115 @@ describe('app', () => {
         expect(parsedPayload).to.be.an("array");
     })
 
-    it('POST /files -Should upload file and return 201', async () => {
+    // /users/logo - only images
+
+    it('POST /users/logo -Should upload valid format logo and return 201', async () => {
         const formData = createFormData();
-        appendFiles(formData, file.filenames.valid);
+        appendFiles(formData, file.filenames[0], 'logo'); // .png
 
         const payload = await streamToPromise(formData);
         const headers = formData.getHeaders();
 
-        const response = await uploadFile(payload, headers);
+        const response = await uploadLogo(payload, headers);
         const parsedPayload = JSON.parse(response.payload);
 
         expect(response.statusCode).to.equal(201);
         expect(parsedPayload).to.have.property("message");
     })
 
-    it('POST /files -Should upload a file that already exists', async () => {
+    it('POST /users/logo -Should upload invalid format logo and return 422', async () => {
         const formData = createFormData();
-        appendFiles(formData, file.filenames.valid);
+        appendFiles(formData, file.filenames[1], 'logo'); // .doc
 
         const payload = await streamToPromise(formData);
         const headers = formData.getHeaders();
 
-        const response = await uploadFile(payload, headers);
+        const response = await uploadLogo(payload, headers);
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(parsedPayload.statusCode).to.equal(422);
+        expect(parsedPayload.message).to.equal(ClientError.invalidFileFormat);
+    })
+
+    it('POST /users/logo -Should upload a file that already exists and return 400', async () => {
+        const formData = createFormData();
+        appendFiles(formData, file.filenames[0], 'logo'); // .png
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadLogo(payload, headers);
         const parsedPayload = JSON.parse(response.payload);
 
         expect(parsedPayload.statusCode).to.equal(400);
         expect(parsedPayload.message).to.equal(ClientError.fileAlreadyExists);
     })
 
-    it('PUT /files - Should update name of a certain file', async () => {
+
+    it('POST /users/logo - Should download logo with too large size, returns 413', async () => {
+        const formData = createFormData();
+        appendFiles(formData, file.filenames[2], 'logo');
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadLogo(payload, headers);
+        
+        expect(response.statusCode).to.equal(413);
+    })
+
+    // /users/jobs -only docs
+
+    it('POST /users/jobs -Should upload valid format file and return 201', async () => {
+        const formData = createFormData();
+        appendFiles(formData, file.filenames[1]); // .doc
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadJob(payload, headers);
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(response.statusCode).to.equal(201);
+        expect(parsedPayload).to.have.property("message");
+    })
+
+    it('POST /users/jobs -Should upload invalid format file and return 422', async () => {
+        const formData = createFormData();
+        appendFiles(formData, file.filenames[4]); // .odt
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadJob(payload, headers);
+        const parsedPayload = JSON.parse(response.payload);
+
+        expect(parsedPayload.statusCode).to.equal(422);
+        expect(parsedPayload.message).to.equal(ClientError.invalidFileFormat);
+    })
+
+    it('POST /users/jobs - Should download file with too large size, returns 413', async () => {
+        const formData = createFormData();
+        appendFiles(formData, file.filenames[2]); // large image
+
+        const payload = await streamToPromise(formData);
+        const headers = formData.getHeaders();
+
+        const response = await uploadJob(payload, headers);
+        
+        expect(response.statusCode).to.equal(413);
+    })
+
+    // common for all routes
+
+    it('PUT /files - Should update name of a file previously uploaded file and return 200', async () => {
         const response = await updateFile(file.fileToBeUpd);
         
         expect(response.statusCode).to.equal(200);
         expect(response.request.payload).to.include(file.fileToBeUpd);
     })
 
-    it('PUT /files - Should update non-existing file', async () => {
+    it('PUT /files - Should update non-existing file and return 400', async () => {
         const response = await updateFile({...file.fileToBeUpd, id: 666});
         const parsedPayload = JSON.parse(response.payload);
 
@@ -97,7 +178,7 @@ describe('app', () => {
         expect(parsedPayload.message).to.equal(ClientError.fileNotExists);
     })
 
-    it('DELETE /files - Should delete a certain file and return 200', async () => {
+    it('DELETE /files - Should delete a file previously uploaded and return 200', async () => {
         const response = await deleteFile({id: file.fileToBeDel.id});
         const parsedPayload = JSON.parse(response.payload);
 
@@ -110,33 +191,6 @@ describe('app', () => {
         const parsedPayload = JSON.parse(response.payload);
         expect(parsedPayload.statusCode).to.equal(400);
         expect(parsedPayload.message).to.equal(ClientError.fileNotExists);
-    })
-
-    it('POST /files - Should download file with too large size, returns 413', async () => {
-        const formData = createFormData();
-        appendFiles(formData, file.filenames.inValid[0]);
-
-        const payload = await streamToPromise(formData);
-        const headers = formData.getHeaders();
-
-        const response = await uploadFile(payload, headers);
-        
-        expect(response.statusCode).to.equal(413);
-    })
-
-    it('POST /files - Should download file with invalid file format, returns 422', async () => {
-        const formData = createFormData();
-        appendFiles(formData, file.filenames.inValid[1]);
-
-        const payload = await streamToPromise(formData);
-        const headers = formData.getHeaders();
-
-        const response = await uploadFile(payload, headers);
-        
-        const parsedPayload = JSON.parse(response.payload);
-
-        expect(parsedPayload.statusCode).to.equal(422);
-        expect(parsedPayload.message).to.equal(ClientError.invalidFileFormat);
     })
 
     after(async () => {

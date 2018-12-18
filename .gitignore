@@ -3,4 +3,5 @@ app1.js
 app2.js
 appfs.js
 apptest.js
-public/imgs/**
+public/files/**
+public/files-test/**

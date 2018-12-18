@@ -1,6 +1,5 @@
 const FileSystem = require('./fileSystem');
-const workingUrl = require('../utils/workingUrl');
-const utils = require('./utils');
+const { workingUrl, getApi } = require('./utils');
 const { ClientError } = require('../constants');
 
 class FileController {
@@ -11,7 +10,7 @@ class FileController {
     //private
     async handleFileUpload (file, h) {
         try {
-            const {filename} = file.hapi;
+            const { filename } = file.hapi;
             const data = file._data;
         
             const isExist = this._fileSystem.isExist(filename);
@@ -42,8 +41,8 @@ class FileController {
     async getViewOfListOfFiles(req, h) {
         try {
             const url = workingUrl('/files');
-            const data = await utils.getApi(url);
-            const files = utils.getHtmlString(data);
+            const data = await getApi(url);
+            const files = getHtmlString(data);
             
             return h.response(files)
                 .type('text/html')
@@ -53,7 +52,12 @@ class FileController {
         }
     }
 
-    async uploadFile(req, h) {
+    async saveLogo(req, h) {
+        const { logo } = req.payload;
+        return this.handleFileUpload(logo, h);
+    }
+
+    async saveJob(req, h) {
         const { file } = req.payload;
         return this.handleFileUpload(file, h);
     }
@@ -61,7 +65,7 @@ class FileController {
     async updateFile(req, h) {
         try {
             const {id, newFilename} = req.payload;
-            const response = await this._fileModel.findOne({where: {id}});
+            const response = await this._fileModel.findOne({where: { id }});
     
             if(response === null) {
                 return h.badRequest(ClientError.fileNotExists);
@@ -86,7 +90,7 @@ class FileController {
             }
     
             await this._fileSystem.removeFile(response.dataValues.filename);
-            await this._fileModel.destroy({where: {id}});
+            await this._fileModel.destroy({where: { id }});
             return h.response({message: 'deleted successfully'}).code(200);    
         }  catch (err) {
                 return h.badImplementation();

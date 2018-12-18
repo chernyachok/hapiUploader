@@ -5,7 +5,7 @@ dotenv.config({path: path.join(process.cwd(), '.env.test')});
 const initServer = require('../server/initServer');
 const initApi = require('../files');
 const initDb = require('../db/initDb');
-const workingUrl = require('../utils/workingUrl');
+const { workingUrl } = require('../files/utils');
 
 const { getServerConfigs } = require('../configurations');
 
