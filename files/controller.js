@@ -31,6 +31,7 @@ class FileController {
 
     async getListOfFiles(req, h) {
         try {
+            console.log(req._core.registrations);
             const files = await this._fileModel.findAll();
             return h.response(files).code(200);
         }  catch (err) {

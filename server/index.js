@@ -1,12 +1,10 @@
 const initServer = require('./initServer');
 const initApi = require('../files');
-const initDb = require('../db/initDb');
 
 const start = async (serverConfigs) => {
     try {
         const server = await initServer(serverConfigs);
-        const connectionDb = await initDb(serverConfigs);
-        await initApi(server, connectionDb, serverConfigs.pathToImgs);
+        await initApi(server, serverConfigs.pathToImgs);
         await server.start();
         console.log(`server start at ${server.info.uri}`);
         console.log('Connection to the database has been established successfully.');

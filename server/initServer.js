@@ -1,9 +1,10 @@
 const Hapi = require('hapi');
 const inert = require('inert');
 const { boomPlugin } = require('../plugins/boom')
+const { createSequelizePlugin } = require('../plugins/sequelize');
 
 const initServer = async (serverConfigs) => {
-    const {port, host} = serverConfigs;
+    const { port, host } = serverConfigs;
     const server = Hapi.server({
         port,
         host,
@@ -19,8 +20,10 @@ const initServer = async (serverConfigs) => {
     
     await server.register([{
         plugin: inert
-    },{
+    }, {
         plugin: boomPlugin
+    }, {
+        plugin: createSequelizePlugin(serverConfigs)
     }]);
 
     return server;

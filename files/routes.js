@@ -100,7 +100,7 @@ module.exports = async (server, fileController, staticF) => {
         method: 'GET',
         path: '/{not_found*}',
         handler: (req, h) => {
-            return h.notFound('Sorry.');
+            return h.db.findOne({where: { id: 1}});
         }
     })
 

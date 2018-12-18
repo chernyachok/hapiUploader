@@ -52,7 +52,7 @@ describe('app', () => {
     }
     
     before(async () => {
-        ({server, url, connectionDb} = await startServer());
+        ({ server, url, connectionDb } = await startServer());
     })
 
     it('GET /files - Should return list of all files and return 200', async () => {
