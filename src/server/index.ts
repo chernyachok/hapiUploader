@@ -1,7 +1,8 @@
 import initServer from './initServer';
 import initApi from '../files';
+import { ServerConfigurations } from '../configurations';
 
-export default async function (serverConfigs) {
+export default async function (serverConfigs: ServerConfigurations) {
     try {
         const server = await initServer(serverConfigs);
         await initApi(server, serverConfigs.pathToImgs);

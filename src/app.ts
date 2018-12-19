@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
+import * as  dotenv from 'dotenv'; 
 dotenv.config();
-const { getServerConfigs } = require('./configurations');
+import { getServerConfigs } from './configurations';
 
 const serverConfigs = getServerConfigs();
+import initServer from './server';
 
-require('./server')(serverConfigs);
-
+initServer(serverConfigs);

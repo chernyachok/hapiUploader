@@ -1,6 +1,6 @@
-const axios = require('axios');
-const mime = require('mime');
-const { ClientError } = require('../constants');
+import * as axios from 'axios';
+import * as mime from 'mime';
+import { ClientError } from '../constants';
 
 const { protocol, host, port } = require('../configurations').getServerConfigs();
 

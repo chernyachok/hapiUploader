@@ -1,8 +1,10 @@
-const Sequalize = require('sequelize');
+import * as SequelizeConn from 'sequelize';
+import { Sequelize } from 'sequelize';
+import { ServerConfigurations } from '../configurations';
 
-const initDb = async (serverConfigs) => {
+export default async function(serverConfigs: ServerConfigurations): Promise<Sequelize> {
     const { dbName, dbUser, dbUserPass, dbDialect } = serverConfigs;
-        const connection = new Sequalize(dbName, dbUser, dbUserPass, {
+        const connection = new SequelizeConn(dbName, dbUser, dbUserPass, {
             dialect: dbDialect,
             define: {
                 freezeTableName: true,
@@ -13,5 +15,3 @@ const initDb = async (serverConfigs) => {
         await connection.authenticate();
         return connection;
 }
-
-module.exports = initDb;

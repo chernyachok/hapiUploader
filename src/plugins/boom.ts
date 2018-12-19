@@ -1,6 +1,8 @@
-const Boom = require('boom');
+import * as Boom from 'boom';
+import { Server } from '../types/server';
+import { PluginObject } from '../types/plugin';
 
-const methods = [
+const methods: string[] = [
     "badImplementation", // 500
     "notFound", // 404
     "badData", // 422
@@ -8,12 +10,12 @@ const methods = [
     "badRequest" // 400
   ];
 
-export boomPlugin = {
+export const boomPlugin: PluginObject = {
     name: "Boom",
     version: "1.0.0",
-    register: async function (server) {
+    register: async function (server: Server) {
         methods.forEach(method => {
-            const boomHandler = (message) => Boom[method](message);
+            const boomHandler = (message: string) => Boom[method](message);
             server.decorate('toolkit', method, boomHandler);
         }); 
     }

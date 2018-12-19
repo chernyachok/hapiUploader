@@ -1,4 +1,15 @@
-function getServerConfigs() {
+export interface ServerConfigurations {
+    port: string;
+    host: string;
+    protocol: string;
+    dbName: string;
+    dbUser: string;
+    dbUserPass: string;
+    dbDialect: string;
+    pathToImgs: string;
+}
+
+export function getServerConfigs(): ServerConfigurations {
     return {
         port: process.env.PORT,
         host: process.env.HOST,
@@ -9,8 +20,4 @@ function getServerConfigs() {
         dbDialect: process.env.DB_DIALECT,
         pathToImgs: process.env.STATIC_FOLDER
     }
-}
-
-module.exports = {
-    getServerConfigs
 }

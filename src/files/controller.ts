@@ -1,14 +1,18 @@
-const FileSystem = require('./fileSystem');
-const { workingUrl, getApi } = require('./utils');
-const { ClientError } = require('../constants');
+import  FileSystem from './fileSystem';
+import { workingUrl, getApi } from './utils';
+import { ClientError } from '../constants';
+import { IFileController } from './type';
+import { SequelizeModel } from '../types/model';
 
-class FileController {
-    constructor(fileModel, pathToImgs) {
+export default class FileController implements IFileController {
+    private _fileModel: SequelizeModel;
+    private _fileSystem: FileSystem;
+
+    constructor(fileModel: SequelizeModel, pathToImgs: string) {
         this._fileModel = fileModel;
         this._fileSystem = new FileSystem(pathToImgs);
     }
-    //private
-    async handleFileUpload (file, h) {
+    private async handleFileUpload (file, h) {
         try {
             const { filename } = file.hapi;
             const data = file._data;
@@ -98,6 +102,4 @@ class FileController {
         }
         
     }
-} 
-
-module.exports = FileController;
+}

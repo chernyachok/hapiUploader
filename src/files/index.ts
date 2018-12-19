@@ -1,8 +1,9 @@
-const File = require('../db/models/file');
-const FileController = require('./controller');
-const initRoutes = require('./routes');
+import File from '../db/models/file';
+import FileController from './controller';
+import initRoutes from './routes';
+import { Server } from '../types/server';
 
-module.exports = async (server, pathToImgs) => {
+export default async function(server: Server, pathToImgs: string): Promise<boolean> {
     const fileModel = await File(server.db);
     const fileController = new FileController(fileModel, pathToImgs);
     server.bind(fileController);

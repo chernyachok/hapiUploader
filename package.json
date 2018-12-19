@@ -5,16 +5,18 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build": "npm run build-ts && npm run tslint && npm run copy-configs",
+    "build": "npm run watch-ts && npm run tslint && npm run copy-configs",
     "test": "mocha || true",
     "copy-configs": "cpx \"src/configurations/*.json\" build/configurations",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "build-ts": "tsc"
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/inert": "^5.1.2",
     "axios": "^0.18.0",
     "boom": "^7.3.0",
@@ -44,6 +46,7 @@
     "@types/joi": "^14.0.1",
     "@types/mime": "^2.0.0",
     "@types/mocha": "^5.2.5",
+    "@types/sequelize": "^4.27.33",
     "@types/stream-to-promise": "^2.2.0",
     "mocha": "^5.2.0"
   }
