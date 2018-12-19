@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/fs-extra": "^5.0.4",
     "@types/inert": "^5.1.2",
     "axios": "^0.18.0",
     "boom": "^7.3.0",

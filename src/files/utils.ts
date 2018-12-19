@@ -1,27 +1,35 @@
 import * as axios from 'axios';
 import * as mime from 'mime';
 import { ClientError } from '../constants';
+import { getServerConfigs } from '../configurations';
+import { Request, Readable } from '../types/request';
+import { Response } from '../types/response';
 
-const { protocol, host, port } = require('../configurations').getServerConfigs();
+const { protocol, host, port } = getServerConfigs();
 
-const isAccepted = (type, allowedFormats) => allowedFormats.some(item => item === type);
+const isAccepted = (type: string, allowedFormats: Array<string>): boolean => allowedFormats.some(item => item === type);
 
-const filterFile = file =>  allowedFormats => {
+const filterFile = (file: Readable) => (allowedFormats: Array<string>) => {
     const type = mime.getType(file.hapi.filename);
     return isAccepted(type, allowedFormats);
 }
 
-const createFileValidationHandler = validate => (fieldName, allowedFormats) => (req, h) => {
-    const file = req.payload[fieldName];
-    if (!validate(file, allowedFormats)) {
-        return h.badData(ClientError.invalidFileFormat);
-    }
-    return true;
+const createFileValidationHandler = 
+    (validate: (file: Readable, allowedFormats: Array<string>) => boolean) => 
+        (fieldName: string, allowedFormats: Array<string>) => 
+            (req: Request, h: Response) => {
+                const file = req.payload[fieldName];
+                if (!validate(file, allowedFormats)) {
+                    return h.badData(ClientError.invalidFileFormat);
+                }
+                return true;
 }
 
-exports.handleFileValidation = createFileValidationHandler((file, allowedFormats) => filterFile(file)(allowedFormats));
+export const handleFileValidation = createFileValidationHandler(
+    (file, allowedFormats) => filterFile(file)(allowedFormats)
+);
 
-exports.getImageAllowedFormats = () => {
+export const getImageAllowedFormats = (): string[] => {
     return  [
             "image/png", 
             "image/jpg", 
@@ -29,22 +37,22 @@ exports.getImageAllowedFormats = () => {
         ];
 }
 
-exports.getDocsAllowedFormats = () => {
+export const getDocsAllowedFormats = (): string[] => {
     return [
             "application/msword",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
 }
 
-exports.workingUrl = (additional = '') => 
+export const workingUrl = (additional = ''): string => 
     protocol + '://' + host + ':' + port + additional;
 
-exports.getApi = async (url) => {
+export const getApi = async (url) => {
     const { data } = await axios.get(url);
     return data;
 }
 
-exports.getHtmlString = data => {
+export const getHtmlString = data => {
     let files = '';
         data.length && data.forEach((item, index) => {
            if (index === 0) {

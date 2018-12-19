@@ -3,7 +3,7 @@ const config = require('../configurations/config.dev.json');
 const path = require('path');
 const { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } = require('./utils');
 
-module.exports = async (server, fileController, staticF) => {
+export default async function(server, fileController, staticFolder) {
 
     server.route({
         method: 'GET',
@@ -25,7 +25,7 @@ module.exports = async (server, fileController, staticF) => {
         path: '/files/{filename}',
         handler: {
             directory: {
-                path: path.join(process.cwd(), 'public', `${staticF}`)
+                path: path.join(process.cwd(), 'public', `${staticFolder}`)
             }
         }
     })

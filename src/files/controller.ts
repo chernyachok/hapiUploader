@@ -1,10 +1,11 @@
 import  FileSystem from './fileSystem';
-import { workingUrl, getApi } from './utils';
+import { workingUrl, getApi, getHtmlString } from './utils';
 import { ClientError } from '../constants';
-import { IFileController } from './type';
 import { SequelizeModel } from '../types/model';
+import { Request, Readable } from '../types/request';
+import { Response } from '../types/response';
 
-export default class FileController implements IFileController {
+export default class FileController {
     private _fileModel: SequelizeModel;
     private _fileSystem: FileSystem;
 
@@ -12,7 +13,7 @@ export default class FileController implements IFileController {
         this._fileModel = fileModel;
         this._fileSystem = new FileSystem(pathToImgs);
     }
-    private async handleFileUpload (file, h) {
+    private async handleFileUpload (file: Readable, h: Response) {
         try {
             const { filename } = file.hapi;
             const data = file._data;
@@ -33,9 +34,8 @@ export default class FileController implements IFileController {
         }
     }
 
-    async getListOfFiles(req, h) {
+    public async getListOfFiles(req: Request, h: Response) {
         try {
-            console.log(req._core.registrations);
             const files = await this._fileModel.findAll();
             return h.response(files).code(200);
         }  catch (err) {
@@ -43,7 +43,7 @@ export default class FileController implements IFileController {
         }
     }
 
-    async getViewOfListOfFiles(req, h) {
+    public async getViewOfListOfFiles(req: Request, h: Response) {
         try {
             const url = workingUrl('/files');
             const data = await getApi(url);
@@ -57,17 +57,17 @@ export default class FileController implements IFileController {
         }
     }
 
-    async saveLogo(req, h) {
+    public async saveLogo(req: Request, h: Response) {
         const { logo } = req.payload;
         return this.handleFileUpload(logo, h);
     }
 
-    async saveJob(req, h) {
+    public async saveJob(req: Request, h: Response) {
         const { file } = req.payload;
         return this.handleFileUpload(file, h);
     }
 
-    async updateFile(req, h) {
+    public async updateFile(req: Request, h: Response) {
         try {
             const {id, newFilename} = req.payload;
             const response = await this._fileModel.findOne({where: { id }});
@@ -86,7 +86,7 @@ export default class FileController implements IFileController {
         }
     }
     
-    async deleteFile(req, h) {
+    public async deleteFile(req: Request, h: Response) {
         try {
             const { id } = req.payload;
             const response = await this._fileModel.findOne({where: {id}});
