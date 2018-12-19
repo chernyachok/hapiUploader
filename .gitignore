@@ -5,3 +5,6 @@ appfs.js
 apptest.js
 public/files/**
 public/files-test/**
+.env
+.env.test
+build

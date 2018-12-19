@@ -1,6 +1,6 @@
-const initDb = require('../db/initDb');
+import initDb from '../db/initDb';
 
-const createSequelizePlugin = (serverConfigs) => ({
+export const createSequelizePlugin = (serverConfigs) => ({
     name: 'Sequelize',
     version: '1.1.0',
     register: async function (server, options) {
@@ -9,7 +9,3 @@ const createSequelizePlugin = (serverConfigs) => ({
         server.decorate('server', 'db', connectionDb);
     }
 })
-
-module.exports = {
-    createSequelizePlugin
-}

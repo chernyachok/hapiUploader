@@ -5,12 +5,17 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "mocha || true"
+    "build": "npm run build-ts && npm run tslint && npm run copy-configs",
+    "test": "mocha || true",
+    "copy-configs": "cpx \"src/configurations/*.json\" build/configurations",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "build-ts": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/inert": "^5.1.2",
     "axios": "^0.18.0",
     "boom": "^7.3.0",
     "chai": "^4.2.0",
@@ -31,6 +36,15 @@
     "stream-to-promise": "^2.2.0"
   },
   "devDependencies": {
+    "@types/boom": "^7.2.1",
+    "@types/chai": "^4.1.7",
+    "@types/dotenv": "^6.1.0",
+    "@types/form-data": "^2.2.1",
+    "@types/hapi": "^17.8.2",
+    "@types/joi": "^14.0.1",
+    "@types/mime": "^2.0.0",
+    "@types/mocha": "^5.2.5",
+    "@types/stream-to-promise": "^2.2.0",
     "mocha": "^5.2.0"
   }
 }

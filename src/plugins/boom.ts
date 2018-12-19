@@ -8,7 +8,7 @@ const methods = [
     "badRequest" // 400
   ];
 
-exports.boomPlugin = {
+export boomPlugin = {
     name: "Boom",
     version: "1.0.0",
     register: async function (server) {

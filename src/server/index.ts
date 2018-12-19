@@ -1,7 +1,7 @@
-const initServer = require('./initServer');
-const initApi = require('../files');
+import initServer from './initServer';
+import initApi from '../files';
 
-const start = async (serverConfigs) => {
+export default async function (serverConfigs) {
     try {
         const server = await initServer(serverConfigs);
         await initApi(server, serverConfigs.pathToImgs);
@@ -13,5 +13,3 @@ const start = async (serverConfigs) => {
         process.exit(1);
     }
 }
-
-module.exports = start;

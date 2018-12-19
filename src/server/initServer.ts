@@ -1,9 +1,10 @@
-const Hapi = require('hapi');
-const inert = require('inert');
-const { boomPlugin } = require('../plugins/boom')
-const { createSequelizePlugin } = require('../plugins/sequelize');
+import * as Hapi from 'hapi';
+import * as inert from 'inert';
 
-const initServer = async (serverConfigs) => {
+import { boomPlugin } from '../plugins/boom';
+import { createSequelizePlugin } from '../plugins/sequelize';
+
+export default async function (serverConfigs) {
     const { port, host } = serverConfigs;
     const server = Hapi.server({
         port,
@@ -28,5 +29,3 @@ const initServer = async (serverConfigs) => {
 
     return server;
 }
-
-module.exports = initServer;
