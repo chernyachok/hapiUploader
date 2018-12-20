@@ -1,24 +1,23 @@
-import * as SequelizeTypes from 'sequelize';
-import { Sequelize } from 'sequelize';
-import { SequelizeModel } from '../../types/model';
+import * as Sequelize from 'sequelize';
+// import { SequelizeModel } from '../../types/model';
 
-export default async function(connection: Sequelize): Promise<SequelizeModel> {
-    const File = connection.define('files', {
+export default async function(connection: Sequelize.Sequelize): Promise<any>{
+    const file = connection.define('files', {
         id: {
-            type: SequelizeTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
         filename: {
-            type: SequelizeTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false
         },
         url: {
-            type: SequelizeTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false
         }
     });
-    await File.sync();
-    return File;
+    await file.sync();
+    return file;
 }

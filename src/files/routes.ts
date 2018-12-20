@@ -1,9 +1,18 @@
-const validator = require('./validator');
-const config = require('../configurations/config.dev.json');
-const path = require('path');
-const { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } = require('./utils');
+import {
+    logoModel,
+    jobModel,
+    deleteValidator,
+    updateValidator
+} from './validator';
+import config from '../configurations/config.dev.json';
+import * as path from 'path';
+import { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } from './utils';
+import { Server } from '../types/server';
+import FileController from './controller';
+import { Request } from '../types/request';
+import { Response } from '../types/response';
 
-export default async function(server, fileController, staticFolder) {
+export default async function(server: Server, fileController: FileController, staticFolder: string) {
 
     server.route({
         method: 'GET',
@@ -36,7 +45,7 @@ export default async function(server, fileController, staticFolder) {
         options: {
             handler: fileController.updateFile,
             validate: {
-                payload: validator.updateValidator
+                payload: updateValidator
             }
         }
     })
@@ -47,7 +56,7 @@ export default async function(server, fileController, staticFolder) {
         options: {
             handler: fileController.deleteFile,
             validate: {
-                payload: validator.deleteValidator
+                payload: deleteValidator
             }
         }
     })
@@ -69,7 +78,7 @@ export default async function(server, fileController, staticFolder) {
                 maxBytes: config.server.fileMaxSize
             },
             validate: {
-                payload: validator.logoModel
+                payload: logoModel
             }
         }
     })
@@ -91,7 +100,7 @@ export default async function(server, fileController, staticFolder) {
                 maxBytes: config.server.fileMaxSize
             },
             validate: {
-                payload: validator.jobModel
+                payload: jobModel
             }
         }
     })
@@ -99,8 +108,8 @@ export default async function(server, fileController, staticFolder) {
     server.route({
         method: 'GET',
         path: '/{not_found*}',
-        handler: (req, h) => {
-            return h.db.findOne({where: { id: 1}});
+        handler: (req: Request, h: Response) => {
+            return h.notFound('sorry');
         }
     })
 

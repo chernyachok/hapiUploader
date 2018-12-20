@@ -1,17 +1,17 @@
-interface WhereObj<T> {
+export interface WhereObj<T> {
     where: T
 }
-interface FindOne {
+export interface FindOne {
     id: number;
 }
 
-interface FindAll {
+export interface FindAll {
     id?: number;
     filename?: string;
     url?: string;
 }
 
-interface SequalResult {
+export interface SequalResult {
     dataValues: {
         id: number;
         filename: string;

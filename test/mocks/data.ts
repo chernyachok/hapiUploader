@@ -1,4 +1,4 @@
-const file = {
+export const file = {
     filenames: [['elephant.png'] ,['lab_1.doc'], ['large.jpg'], ['favicon.ico'], ['lab_1.odt']],
     fileToBeUpd: {
         id: 1,
@@ -8,8 +8,4 @@ const file = {
         id: 1
     },
     badId: 99
-}
-
-module.exports = {
-    file
 }

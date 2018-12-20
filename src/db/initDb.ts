@@ -1,8 +1,7 @@
-import * as SequelizeConn from 'sequelize';
-import { Sequelize } from 'sequelize';
+import SequelizeConn from 'sequelize';
 import { ServerConfigurations } from '../configurations';
 
-export default async function(serverConfigs: ServerConfigurations): Promise<Sequelize> {
+export default async function(serverConfigs: ServerConfigurations): Promise<SequelizeConn.Sequelize> {
     const { dbName, dbUser, dbUserPass, dbDialect } = serverConfigs;
         const connection = new SequelizeConn(dbName, dbUser, dbUserPass, {
             dialect: dbDialect,

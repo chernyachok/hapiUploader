@@ -1,27 +1,28 @@
 import * as fs from 'fs-extra';
-const path = require('path');
+import * as path from 'path';
 
-class FileSystem {
-    constructor(pathToImgs) {
+export default class FileSystem {
+
+    private _path: string;
+
+    constructor(pathToImgs: string) {
         this._path = path.join(process.cwd(), 'public', pathToImgs);
     }
 
-    async writeFile(fileName, data) {
+    async writeFile(fileName: string, data: Buffer): Promise<void> {
         fs.writeFile(path.join(this._path, fileName), data);
     }
     
-    async removeFile(fileToBeDeleted) {
+    async removeFile(fileToBeDeleted: string): Promise<void> {
         fs.remove(path.join(this._path, fileToBeDeleted));
     }
     
-    async renameFile(oldFileName, newFileName) {
+    async renameFile(oldFileName: string, newFileName: string): Promise<void> {
         fs.rename(path.join(this._path, oldFileName), path.join(this._path, newFileName));
     }
     
-    isExist(fileName) {
+    isExist(fileName: string): boolean {
         return fs.existsSync(path.join(this._path, fileName));
     } 
    
 }
-
-module.exports = FileSystem;

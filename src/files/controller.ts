@@ -1,4 +1,4 @@
-import  FileSystem from './fileSystem';
+import FileSystem from './fileSystem';
 import { workingUrl, getApi, getHtmlString } from './utils';
 import { ClientError } from '../constants';
 import { SequelizeModel } from '../types/model';

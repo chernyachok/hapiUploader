@@ -24,6 +24,5 @@ export default async function (serverConfigs: ServerConfigurations): Promise<Ser
     }, {
         plugin: createSequelizePlugin(serverConfigs)
     }]);
-
     return server;
 }

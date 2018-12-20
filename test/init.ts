@@ -1,4 +1,4 @@
-const path = require('path');
+import * as path from 'path';
 const dotenv = require('dotenv');
 dotenv.config({path: path.join(process.cwd(), '.env.test')});
 

@@ -1,19 +1,19 @@
-const joi = require('joi');
-const { Readable } = require('stream');
+import * as Joi from 'joi';
+import { Readable } from 'stream';
 
-module.exports.logoModel = joi.object().keys({
-    logo: joi.object().type(Readable)
+export const logoModel = Joi.object().keys({
+    logo: Joi.object().type(Readable)
 })
 
-module.exports.jobModel = joi.object().keys({
-    file: joi.object().type(Readable)
+export const jobModel = Joi.object().keys({
+    file: Joi.object().type(Readable)
 })
 
-module.exports.deleteValidator = joi.object().keys({
-    id: joi.number().positive().required()
+export const deleteValidator = Joi.object().keys({
+    id: Joi.number().positive().required()
 })
 
-module.exports.updateValidator = joi.object().keys({
-    id: joi.number().positive().required(),
-    newFilename: joi.string().required()
+export const updateValidator = Joi.object().keys({
+    id: Joi.number().positive().required(),
+    newFilename: Joi.string().required()
 })

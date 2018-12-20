@@ -1,9 +1,10 @@
-import * as axios from 'axios';
+import axios from 'axios';
 import * as mime from 'mime';
 import { ClientError } from '../constants';
 import { getServerConfigs } from '../configurations';
 import { Request, Readable } from '../types/request';
 import { Response } from '../types/response';
+import { FileApiResult } from './types';
 
 const { protocol, host, port } = getServerConfigs();
 
@@ -47,20 +48,20 @@ export const getDocsAllowedFormats = (): string[] => {
 export const workingUrl = (additional = ''): string => 
     protocol + '://' + host + ':' + port + additional;
 
-export const getApi = async (url) => {
-    const { data } = await axios.get(url);
+export const getApi = async (url: string): Promise<Array<FileApiResult>> => {
+    const { data } = await axios.get<Array<FileApiResult>>(url);
     return data;
 }
 
-export const getHtmlString = data => {
+export const getHtmlString = (data: Array<FileApiResult>): string => {
     let files = '';
-        data.length && data.forEach((item, index) => {
+        data.length && data.forEach((item: FileApiResult, index: number) => {
            if (index === 0) {
-               let keysArr = [];
-               for(key in item) {
+               let keysArr: string[] = [];
+               for(let key in item) {
                 keysArr.push(key);
                }
-               keysArr.forEach((item2, index2) => {
+               keysArr.forEach((item2: string, index2) => {
                    index2 === 0 ? files = '<tr>': undefined;
             
                    files += `<th>${item2}</th>`;
