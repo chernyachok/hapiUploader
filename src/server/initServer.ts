@@ -5,7 +5,7 @@ import { boomPlugin } from '../plugins/boom';
 import { createSequelizePlugin } from '../plugins/sequelize';
 import { ServerConfigurations } from "../configurations";
 
-export default async function (serverConfigs: ServerConfigurations): Promise<Server> {
+export default async function initServer(serverConfigs: ServerConfigurations): Promise<Server> {
     const { port, host } = serverConfigs;
     const server = new Hapi.Server({
         port,

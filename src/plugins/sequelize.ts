@@ -8,7 +8,6 @@ export const createSequelizePlugin = (serverConfigs: ServerConfigurations): Plug
     version: '1.1.0',
     register: async function (server: Server) {
         const connectionDb = await initDb(serverConfigs);
-        
-        server.decorate('server', 'db', connectionDb as any);
+        server.decorate('server', 'db', () => connectionDb);
     }
 });

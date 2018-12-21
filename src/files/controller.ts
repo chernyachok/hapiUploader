@@ -1,15 +1,15 @@
 import FileSystem from './fileSystem';
 import { workingUrl, getApi, getHtmlString } from './utils';
 import { ClientError } from '../constants';
-import { SequelizeModel } from '../types/model';
+import { FileModel } from '../types/fileModel';
 import { Request, Readable } from '../types/request';
 import { Response } from '../types/response';
 
 export default class FileController {
-    private _fileModel: SequelizeModel;
+    private _fileModel: FileModel;
     private _fileSystem: FileSystem;
 
-    constructor(fileModel: SequelizeModel, pathToImgs: string) {
+    constructor(fileModel: FileModel, pathToImgs: string) {
         this._fileModel = fileModel;
         this._fileSystem = new FileSystem(pathToImgs);
     }

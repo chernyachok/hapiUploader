@@ -4,5 +4,5 @@ import { ServerConfigurations } from "../configurations";
 export interface PluginObject {
     name: string;
     version: string;
-    register(server: Server, options?: ServerConfigurations): Promise<void>
+    register(server: Server, options?: ServerConfigurations): Promise<void>;
 }

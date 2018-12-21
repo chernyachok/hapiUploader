@@ -1,9 +1,9 @@
-import SequelizeConn from 'sequelize';
+import Sequelize from 'sequelize';
 import { ServerConfigurations } from '../configurations';
 
-export default async function(serverConfigs: ServerConfigurations): Promise<SequelizeConn.Sequelize> {
+export default async function initDb(serverConfigs: ServerConfigurations): Promise<Sequelize.Sequelize> {
     const { dbName, dbUser, dbUserPass, dbDialect } = serverConfigs;
-        const connection = new SequelizeConn(dbName, dbUser, dbUserPass, {
+        const connection = new Sequelize(dbName, dbUser, dbUserPass, {
             dialect: dbDialect,
             define: {
                 freezeTableName: true,

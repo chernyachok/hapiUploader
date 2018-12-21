@@ -1,8 +1,9 @@
-import * as Sequelize from 'sequelize';
-// import { SequelizeModel } from '../../types/model';
+import Sequelize from 'sequelize';
+import { FileInstance, FileAttributes } from '../../types/fileModel';
 
-export default async function(connection: Sequelize.Sequelize): Promise<any>{
-    const file = connection.define('files', {
+export default async function createFileModel(connection: Sequelize.Sequelize): Promise<any> {
+
+    const file = connection.define<FileInstance, FileAttributes>('files', {
         id: {
             type: Sequelize.INTEGER,
             allowNull: false,
