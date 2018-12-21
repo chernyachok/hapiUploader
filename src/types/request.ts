@@ -1,5 +1,5 @@
 import { Request as RequestExtended} from 'hapi';
-import { Readable as ReadableStream } from 'stream';
+import { ReadStream as ReadableStream } from 'fs-extra';
 
 export interface Readable extends ReadableStream {
     hapi: {

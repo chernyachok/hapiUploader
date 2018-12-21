@@ -1,5 +1,5 @@
 export interface ServerConfigurations {
-    port: string;
+    port: number;
     host: string;
     protocol: string;
     dbName: string;
@@ -11,7 +11,7 @@ export interface ServerConfigurations {
 
 export function getServerConfigs(): ServerConfigurations {
     return {
-        port: process.env.PORT,
+        port: parseInt(process.env.PORT, 10),
         host: process.env.HOST,
         protocol: 'http',
         dbName: process.env.DB_NAME,

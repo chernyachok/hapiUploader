@@ -1,15 +1,19 @@
-const expect = require("chai").expect;
-const streamToPromise = require('stream-to-promise');
-const startServer = require('../init');
-const { file } = require('../mocks/data');
-const { createFormData, appendFiles } = require('../utils');
-const { ClientError } = require('../../constants');
+import { expect } from 'chai';
+import streamToPromise from 'stream-to-promise';
+import { Sequelize } from 'sequelize';
+import startServer from '../init';
+import { file } from '../mocks/data';
+import { createFormData, appendFiles } from '../utils';
+import { ClientError } from '../../src/constants';
+import { Server } from '../../src/types/server';
+
+import FormData from 'form-data';
 
 describe('app', () => {
 
-    let server = undefined;
-    let url = undefined;
-    let connectionDb = undefined;
+    let server: Server;
+    let url: string;
+    let connectionDb: Sequelize;
 
     const getAllFiles = async () => 
         server.inject({
@@ -17,7 +21,7 @@ describe('app', () => {
             url: url + '/files',
         });
     
-    const uploadLogo = async (payload, headers) => 
+    const uploadLogo = async (payload: Buffer, headers: FormData.Headers) => 
         server.inject({
             method: 'POST',
             url: url + '/users/logo',
@@ -25,7 +29,7 @@ describe('app', () => {
             headers
         });
     
-    const uploadJob = async (payload, headers) => 
+    const uploadJob = async (payload: Buffer, headers: FormData.Headers) => 
         server.inject({
             method: 'POST',
             url: url + '/users/jobs',
@@ -33,21 +37,21 @@ describe('app', () => {
             headers
         });
     
-    const updateFile = async (payload) => 
+    const updateFile = async (payload: object) => 
         server.inject({
             method: 'PUT',
             url: url + '/files',
             payload
         });
 
-    const deleteFile = async (payload) => 
+    const deleteFile = async (payload: object) => 
         server.inject({
             method: 'DELETE',
             url: url + '/files',
             payload
         });
 
-    const clearDb = async (db) => {
+    const clearDb = async (db: Sequelize) => {
         db.query('DROP TABLE files;');
     }
     
