@@ -8,15 +8,15 @@ export default class FileSystem {
     constructor(pathToImgs: string) {
         this._path = path.join(process.cwd(), 'public', pathToImgs);
     }
-
+   
     async writeFile(fileName: string, data: Buffer): Promise<void> {
         fs.writeFile(path.join(this._path, fileName), data);
     }
-    
+
     async removeFile(fileToBeDeleted: string): Promise<void> {
         fs.remove(path.join(this._path, fileToBeDeleted));
     }
-    
+
     async renameFile(oldFileName: string, newFileName: string): Promise<void> {
         fs.rename(path.join(this._path, oldFileName), path.join(this._path, newFileName));
     }

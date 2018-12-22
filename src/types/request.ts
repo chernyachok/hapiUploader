@@ -5,7 +5,7 @@ export interface Readable extends ReadableStream {
     hapi: {
         filename: string;
         headers: { [key: string]: string };
-    },
+    };
     _data: Buffer;
 }
 
@@ -17,5 +17,5 @@ export interface ReqPayload {
 }
 
 export interface Request extends RequestExtended {
-    payload: ReqPayload
+    payload: ReqPayload;
 }

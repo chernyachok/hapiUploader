@@ -13,7 +13,7 @@ const isAccepted = (type: string, allowedFormats: Array<string>): boolean => all
 const filterFile = (file: Readable) => (allowedFormats: Array<string>) => {
     const type = mime.getType(file.hapi.filename);
     return isAccepted(type, allowedFormats);
-}
+};
 
 const createFileValidationHandler = 
     (validate: (file: Readable, allowedFormats: Array<string>) => boolean) => 
@@ -24,7 +24,7 @@ const createFileValidationHandler =
                     return h.badData(ClientError.invalidFileFormat);
                 }
                 return true;
-}
+};
 
 export const handleFileValidation = createFileValidationHandler(
     (file, allowedFormats) => filterFile(file)(allowedFormats)
@@ -36,14 +36,14 @@ export const getImageAllowedFormats = (): string[] => {
             "image/jpg", 
             "image/jpeg"
         ];
-}
+};
 
 export const getDocsAllowedFormats = (): string[] => {
     return [
             "application/msword",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
-}
+};
 
 export const workingUrl = (additional = ''): string => 
     protocol + '://' + host + ':' + port + additional;
@@ -51,23 +51,25 @@ export const workingUrl = (additional = ''): string =>
 export const getApi = async (url: string): Promise<Array<FileApiResult>> => {
     const { data } = await axios.get<Array<FileApiResult>>(url);
     return data;
-}
+};
 
 export const getHtmlString = (data: Array<FileApiResult>): string => {
     let files = '';
         data.length && data.forEach((item: FileApiResult, index: number) => {
            if (index === 0) {
                let keysArr: string[] = [];
-               for(let key in item) {
-                keysArr.push(key);
+               for (let key in item) {
+                if (item.hasOwnProperty(key)) {
+                    keysArr.push(key);
+                }
                }
                keysArr.forEach((item2: string, index2) => {
-                   index2 === 0 ? files = '<tr>': undefined;
+                   index2 === 0 ? files = '<tr>' : undefined;
             
                    files += `<th>${item2}</th>`;
 
-                   index2 === (keysArr.length-1)? files += '</tr>' : undefined;
-               })
+                   index2 === (keysArr.length - 1) ? files += '</tr>' : undefined;
+               });
            }
            files += `
             <tr>
@@ -79,4 +81,4 @@ export const getHtmlString = (data: Array<FileApiResult>): string => {
         });
     
     return files ? `<table>${files}</table>` : '<h4>No files available!</h4>';
-}
+};

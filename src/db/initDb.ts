@@ -10,7 +10,7 @@ export default async function initDb(serverConfigs: ServerConfigurations): Promi
                 timestamps: false
             },
             logging: false
-        });   
+        });
         await connection.authenticate();
         return connection;
 }

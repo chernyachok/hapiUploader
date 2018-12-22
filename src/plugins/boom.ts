@@ -1,4 +1,4 @@
-import * as Boom from 'boom';
+import Boom from 'boom';
 import { Server } from '../types/server';
 import { PluginObject } from '../types/plugin';
 

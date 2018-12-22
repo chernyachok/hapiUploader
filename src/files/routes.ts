@@ -5,7 +5,7 @@ import {
     updateValidator
 } from './validator';
 import config from '../configurations/config.dev.json';
-import * as path from 'path';
+import * as Path from 'path';
 import { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } from './utils';
 import { Server } from '../types/server';
 import FileController from './controller';
@@ -18,7 +18,7 @@ export default async function(server: Server, fileController: FileController, st
         method: 'GET',
         path: '/main',
         handler: fileController.getViewOfListOfFiles
-    })
+    });
 
     server.route({
         method: 'GET',
@@ -27,17 +27,17 @@ export default async function(server: Server, fileController: FileController, st
             description: 'outputs all files previously uploaded',
             handler: fileController.getListOfFiles,
         }
-    })
+    });
 
     server.route({
         method: 'GET',
         path: '/files/{filename}',
         handler: {
             directory: {
-                path: path.join(process.cwd(), 'public', `${staticFolder}`)
+                path: Path.join(process.cwd(), 'public', `${staticFolder}`)
             }
         }
-    })
+    });
 
     server.route({
         method: 'PUT',
@@ -48,7 +48,7 @@ export default async function(server: Server, fileController: FileController, st
                 payload: updateValidator
             }
         }
-    })
+    });
 
     server.route({
         method: 'DELETE',
@@ -59,7 +59,7 @@ export default async function(server: Server, fileController: FileController, st
                 payload: deleteValidator
             }
         }
-    })
+    });
 
     server.route({
         method: 'POST',
@@ -81,7 +81,7 @@ export default async function(server: Server, fileController: FileController, st
                 payload: logoModel
             }
         }
-    })
+    });
 
     server.route({
         method: 'POST',
@@ -103,7 +103,7 @@ export default async function(server: Server, fileController: FileController, st
                 payload: jobModel
             }
         }
-    })
+    });
 
     server.route({
         method: 'GET',
@@ -111,13 +111,13 @@ export default async function(server: Server, fileController: FileController, st
         handler: (req: Request, h: Response) => {
             return h.notFound('sorry');
         }
-    })
+    });
 
     server.ext('onRequest', (req, h) => {
         let { path } = req.url;
-        if(path.slice(-1) === '/'){
+        if (path.slice(-1) === '/') {
             return h.redirect(path.slice(0, -1)).code(301).takeover();
         }
         return h.continue;
-    })
+    });
 }

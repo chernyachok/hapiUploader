@@ -7,8 +7,16 @@ import initApi from '../src/files';
 import { workingUrl } from '../src/files/utils';
 
 import { getServerConfigs } from '../src/configurations';
+import { Server } from '../src/types/server';
+import { Sequelize } from 'sequelize';
 
-export default async function init() {
+interface InitResult {
+    server: Server;
+    url: string;
+    connectionDb: Sequelize
+}
+
+export default async function init(): Promise<InitResult> {
     try {
         const serverConfigs = getServerConfigs();
         const server = await initServer(serverConfigs);
@@ -20,6 +28,6 @@ export default async function init() {
         return { server, url, connectionDb: server.db() }; 
     } catch (err) {
         console.log('cant launch server or db', err);
-        process.exit(1);
+        throw err;
     }
 }

@@ -19,5 +19,5 @@ export function getServerConfigs(): ServerConfigurations {
         dbUserPass: process.env.DB_USER_PASS,
         dbDialect: process.env.DB_DIALECT,
         pathToImgs: process.env.STATIC_FOLDER
-    }
+    };
 }

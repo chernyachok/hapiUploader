@@ -4,13 +4,17 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "build": "npm run watch-ts && npm run tslint && npm run copy-configs",
-    "test": "mocha || true",
-    "copy-configs": "cpx \"src/configurations/*.json\" build/configurations",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run watch",
+    "build": "npm run build-ts && npm run copy-configs",
     "build-ts": "tsc",
-    "watch-ts": "tsc -w"
+    "watch": "npm run copy-configs && npm run watch-json & npm run watch-ts & npm run watch-node",
+    "watch-ts": "tsc -w",
+    "watch-node": "nodemon build/app.js",
+    "watch-json": "npm run copy-configs -w",
+    "copy-configs": "cpx \"src/configurations/*.json\" build/configurations",
+    "launch": "node build/app.js",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "test": "mocha -r ts-node/register test/**/**.test.ts"
   },
   "keywords": [],
   "author": "",
@@ -33,10 +37,15 @@
     "mime": "^2.4.0",
     "mysql2": "^1.6.4",
     "node-fetch": "^2.3.0",
+    "nyc": "^13.1.0",
     "path": "^0.12.7",
     "sequelize": "^4.42.0",
     "stream": "0.0.2",
-    "stream-to-promise": "^2.2.0"
+    "stream-to-promise": "^2.2.0",
+    "ts-node": "^7.0.1",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "tslint": "^5.12.0",
+    "typescript": "^3.2.2"
   },
   "devDependencies": {
     "@types/boom": "^7.2.1",

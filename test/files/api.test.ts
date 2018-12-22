@@ -53,11 +53,11 @@ describe('app', () => {
 
     const clearDb = async (db: Sequelize) => {
         db.query('DROP TABLE files;');
-    }
+    };
     
     before(async () => {
         ({ server, url, connectionDb } = await startServer());
-    })
+    });
 
     it('GET /files - Should return list of all files and return 200', async () => {
         const response = await getAllFiles();
@@ -199,5 +199,5 @@ describe('app', () => {
 
     after(async () => {
         clearDb(connectionDb);
-    })
-})
+    });
+});
