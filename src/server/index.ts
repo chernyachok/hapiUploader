@@ -4,8 +4,8 @@ import { ServerConfigurations } from '../configurations';
 
 export default async function startServer(serverConfigs: ServerConfigurations): Promise<void> {
     try {
-        const server = await initServer(serverConfigs);
-        await initApi(server, serverConfigs.pathToImgs);
+        const { server, userModel } = await initServer(serverConfigs);
+        await initApi(server, serverConfigs.pathToImgs, userModel);
         await server.start();
         console.log(`server start at ${server.info.uri}`);
         console.log('Connection to the database has been established successfully.');

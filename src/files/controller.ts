@@ -5,14 +5,17 @@ import { ClientError } from '../constants';
 import { FileModel } from '../types/fileModel';
 import { Request, Readable } from '../types/request';
 import { Response } from '../types/response';
+import { UserModel } from '../types/userModel';
 
 export default class FileController {
 
     private _fileModel: FileModel;
     private _fileSystem: FileSystem;
+    private _userModel: UserModel;
 
-    constructor(fileModel: FileModel, pathToImgs: string) {
+    constructor(fileModel: FileModel, userModel: UserModel, pathToImgs: string) {
         this._fileModel = fileModel;
+        this._userModel = userModel;
         this._fileSystem = new FileSystem(pathToImgs);
     }
 
@@ -33,8 +36,11 @@ export default class FileController {
     }
 
     public async registerToken(req: Request, h: Response) {
-        const { id, username } = req.payload;
-        const token = jwt.sign({ id, username }, 'keyboardcat', {
+        const { username } = req.payload;
+        const { dataValues } = await this._userModel.create({
+            username
+        });
+        const token = jwt.sign({ id: dataValues.id, username: dataValues.username }, 'keyboardcat', {
             algorithm: 'HS256'
         });
         return h.response({ auth: true, token});

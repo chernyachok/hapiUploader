@@ -2,24 +2,16 @@ import * as HapiJwt from 'hapi-auth-jwt2';
 import { Server } from '../types/server';
 import { ServerConfigurations } from "../configurations";
 import { ClientError } from '../constants';
-import createUserModel from '../db/models/user'; 
-
-const users = {
-    20: {
-        id: 20,
-        username: 'anton'
-    }
-};
+import { UserModel } from '../types/userModel';
 
 type ValidateUser = (decoded: any) => Promise<{isValid: boolean}>;
 
-export default async function createJwtPlugin(server: Server, configs: ServerConfigurations): Promise<void> {
+export default async function createJwtPlugin(server: Server, configs: ServerConfigurations, userModel: UserModel): Promise<void> {
     try {
         await server.register(HapiJwt);
-        const userModel = await createUserModel(server.db());
+       
         const validate: ValidateUser = async decoded => {
             const response = await userModel.findOne({where: { id: decoded.id}});
-            console.log(response);
             return { isValid: !response ? false : true};
         };
         return setAuthStrategy(server, configs, validate);
@@ -29,7 +21,7 @@ export default async function createJwtPlugin(server: Server, configs: ServerCon
     }
 }
 
-async function setAuthStrategy(server: Server, configs: ServerConfigurations, validate: ValidateUser) {
+async function setAuthStrategy(server: Server, configs: ServerConfigurations, validate: ValidateUser): Promise<void> {
     server.auth.strategy('jwt', 'jwt',
     { key: configs.jwtSecret,          
         validate,           
@@ -44,4 +36,5 @@ async function setAuthStrategy(server: Server, configs: ServerConfigurations, va
     });
 
     server.auth.default("jwt");
+    return null;
 } 

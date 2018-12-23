@@ -6,7 +6,7 @@ export type InstanceExt<T> = {
 
 export type UserInstance = Instance<UserAttributes> & UserAttributes & InstanceExt<UserAttributes>;
 
-export type FileModel = Model<UserInstance, UserAttributes>;
+export type UserModel = Model<UserInstance, UserAttributes>;
 
 export interface UserAttributes {
     id?: number;

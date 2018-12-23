@@ -1,12 +1,13 @@
 import * as Hapi from 'hapi';
 import * as inert from 'inert';
-import { Server } from '../types/server';
+import { Server, InitServer } from '../types/server';
 import { boomPlugin } from '../plugins/boom';
 import { createSequelizePlugin } from '../plugins/sequelize';
 import createJwtPlugin from '../plugins/jwt-auth';
 import { ServerConfigurations } from "../configurations";
+import createUserModel from '../db/models/user'; 
 
-export default async function initServer(serverConfigs: ServerConfigurations): Promise<Server> {
+export default async function initServer(serverConfigs: ServerConfigurations): Promise<InitServer> {
     const { port, host } = serverConfigs;
     const server = new Hapi.Server({
         port,
@@ -17,7 +18,7 @@ export default async function initServer(serverConfigs: ServerConfigurations): P
             }
         }
     });
-    
+
     await server.register([{
         plugin: inert
     }, {
@@ -25,6 +26,8 @@ export default async function initServer(serverConfigs: ServerConfigurations): P
     }, {
         plugin: createSequelizePlugin(serverConfigs)
     }]);
-    await createJwtPlugin(server, serverConfigs);
-    return server;
+    const serverDb = (server as Server).db();
+    const userModel = await createUserModel(serverDb);
+    await createJwtPlugin(server, serverConfigs, userModel);
+    return { server, userModel };
 }
