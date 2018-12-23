@@ -7,6 +7,7 @@ export interface ServerConfigurations {
     dbUserPass: string;
     dbDialect: string;
     pathToImgs: string;
+    jwtSecret: string;
 }
 
 export function getServerConfigs(): ServerConfigurations {
@@ -18,6 +19,7 @@ export function getServerConfigs(): ServerConfigurations {
         dbUser: process.env.DB_USER,
         dbUserPass: process.env.DB_USER_PASS,
         dbDialect: process.env.DB_DIALECT,
-        pathToImgs: process.env.STATIC_FOLDER
+        pathToImgs: process.env.STATIC_FOLDER,
+        jwtSecret: process.env.JWT_SECRET
     };
 }

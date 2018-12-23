@@ -2,7 +2,9 @@ import {
     logoModel,
     jobModel,
     deleteValidator,
-    updateValidator
+    updateValidator,
+    jwtValidator,
+    registerTokenValidator
 } from './validator';
 import config from '../configurations/config.dev.json';
 import * as Path from 'path';
@@ -17,25 +19,65 @@ export default async function(server: Server, fileController: FileController, st
     server.route({
         method: 'GET',
         path: '/main',
-        handler: fileController.getViewOfListOfFiles
+        options: {
+            auth: 'jwt',
+            handler: fileController.getViewOfListOfFiles
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/auth/me',
+        options: {
+            auth: false,
+            handler: fileController.getMe,
+            validate: {
+                headers: jwtValidator
+            },
+            description: 'Decode token',
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/auth/register',
+        options: {
+            auth: false,
+            handler: fileController.registerToken,
+            validate: {
+                payload: registerTokenValidator
+            },
+            description: 'Encode payload into valid token',
+        }
     });
 
     server.route({
         method: 'GET',
         path: '/files',
         options: {
-            description: 'outputs all files previously uploaded',
+            auth: 'jwt',
             handler: fileController.getListOfFiles,
+            validate: {
+                headers: jwtValidator
+            },
+            description: 'outputs all files previously uploaded',
         }
     });
 
     server.route({
         method: 'GET',
         path: '/files/{filename}',
-        handler: {
-            directory: {
-                path: Path.join(process.cwd(), 'public', `${staticFolder}`)
-            }
+        options: {
+            auth: 'jwt',
+            handler: {
+                directory: {
+                    path: Path.join(process.cwd(), 'public', `${staticFolder}`)
+                }
+            },
+            validate: {
+                headers: jwtValidator
+            },
+            description: 'Outputs a certain file',
         }
     });
 
@@ -43,10 +85,13 @@ export default async function(server: Server, fileController: FileController, st
         method: 'PUT',
         path: '/files',
         options: {
+            auth: 'jwt',
             handler: fileController.updateFile,
             validate: {
+                headers: jwtValidator,
                 payload: updateValidator
-            }
+            },
+            description: 'Updates a certain file'
         }
     });
 
@@ -54,10 +99,13 @@ export default async function(server: Server, fileController: FileController, st
         method: 'DELETE',
         path: '/files',
         options: {
+            auth: 'jwt',
             handler: fileController.deleteFile,
             validate: {
+                headers: jwtValidator,
                 payload: deleteValidator
-            }
+            },
+            description: 'deletes a certain file'
         }
     });
 
@@ -65,6 +113,7 @@ export default async function(server: Server, fileController: FileController, st
         method: 'POST',
         path: '/users/logo',
         options: {
+            auth: 'jwt',
             pre: [
                 {
                     assign: 'file',
@@ -78,8 +127,10 @@ export default async function(server: Server, fileController: FileController, st
                 maxBytes: config.server.fileMaxSize
             },
             validate: {
+                headers: jwtValidator,
                 payload: logoModel
-            }
+            },
+            description: 'Upload user avatar'
         }
     });
 
@@ -87,6 +138,7 @@ export default async function(server: Server, fileController: FileController, st
         method: 'POST',
         path: '/users/jobs',
         options: {
+            auth: 'jwt',
             pre: [
                 {
                     assign: 'file',
@@ -100,8 +152,10 @@ export default async function(server: Server, fileController: FileController, st
                 maxBytes: config.server.fileMaxSize
             },
             validate: {
+                headers: jwtValidator,
                 payload: jobModel
-            }
+            },
+            description: 'Save job .doc file'
         }
     });
 

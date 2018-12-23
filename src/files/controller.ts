@@ -1,3 +1,4 @@
+import * as jwt from 'jsonwebtoken';
 import FileSystem from './fileSystem';
 import { workingUrl, getApi, getHtmlString } from './utils';
 import { ClientError } from '../constants';
@@ -13,6 +14,30 @@ export default class FileController {
     constructor(fileModel: FileModel, pathToImgs: string) {
         this._fileModel = fileModel;
         this._fileSystem = new FileSystem(pathToImgs);
+    }
+
+    public async getMe (req: Request, h: Response) {
+        const token = req.headers['authorization'];
+        if (!token) {
+            return h.unauthorized('invalid token');
+        }
+        try {
+            const decoded = jwt.verify(token, 'keyboardcat', {
+                algorithms: ['HS256']
+            });
+            return h.response(decoded);
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+
+    public async registerToken(req: Request, h: Response) {
+        const { id, username } = req.payload;
+        const token = jwt.sign({ id, username }, 'keyboardcat', {
+            algorithm: 'HS256'
+        });
+        return h.response({ auth: true, token});
     }
 
     private async handleFileUpload (file: Readable, h: Response) {

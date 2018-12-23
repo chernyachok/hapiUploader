@@ -3,6 +3,6 @@ dotenv.config();
 import { getServerConfigs } from './configurations';
 
 const serverConfigs = getServerConfigs();
-import initServer from './server';
+import startServer from './server';
 
-initServer(serverConfigs);
+startServer(serverConfigs);

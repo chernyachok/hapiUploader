@@ -3,6 +3,7 @@ import * as inert from 'inert';
 import { Server } from '../types/server';
 import { boomPlugin } from '../plugins/boom';
 import { createSequelizePlugin } from '../plugins/sequelize';
+import createJwtPlugin from '../plugins/jwt-auth';
 import { ServerConfigurations } from "../configurations";
 
 export default async function initServer(serverConfigs: ServerConfigurations): Promise<Server> {
@@ -24,5 +25,6 @@ export default async function initServer(serverConfigs: ServerConfigurations): P
     }, {
         plugin: createSequelizePlugin(serverConfigs)
     }]);
+    await createJwtPlugin(server, serverConfigs);
     return server;
 }
