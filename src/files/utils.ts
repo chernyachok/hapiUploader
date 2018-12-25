@@ -6,6 +6,8 @@ import { Request, Readable } from '../types/request';
 import { Response } from '../types/response';
 import { FileApiResult } from './types';
 
+type Validate = (file: Readable, allowedFormats: Array<string>) => boolean;
+
 const { protocol, host, port } = getServerConfigs();
 
 const isAccepted = (type: string, allowedFormats: Array<string>): boolean => allowedFormats.some(item => item === type);
@@ -16,7 +18,7 @@ const filterFile = (file: Readable) => (allowedFormats: Array<string>) => {
 };
 
 const createFileValidationHandler = 
-    (validate: (file: Readable, allowedFormats: Array<string>) => boolean) => 
+    (validate: Validate) => 
         (fieldName: string, allowedFormats: Array<string>) => 
             (req: Request, h: Response) => {
                 const file = req.payload[fieldName];

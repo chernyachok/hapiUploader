@@ -1,5 +1,5 @@
 export const file = {
-    filenames: [['elephant.png'] ,['lab_1.doc'], ['large.jpg'], ['favicon.ico'], ['lab_1.odt']],
+    filenames: [['elephant.png'] , ['lab_1.doc'], ['large.jpg'], ['favicon.ico'], ['lab_1.odt']],
     fileToBeUpd: {
         id: 1,
         newFilename: 'elephant1.png'
@@ -8,4 +8,9 @@ export const file = {
         id: 1
     },
     badId: 99
-}
+};
+
+export const newUser = {
+    id: 55,
+    username: 'anton'
+};

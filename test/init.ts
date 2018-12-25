@@ -13,19 +13,23 @@ import { Sequelize } from 'sequelize';
 interface InitResult {
     server: Server;
     url: string;
-    connectionDb: Sequelize
+    connectionDb: Sequelize;
 }
 
 export default async function init(): Promise<InitResult> {
     try {
         const serverConfigs = getServerConfigs();
-        const server = await initServer(serverConfigs);
-        await initApi(server, serverConfigs.pathToImgs);
+        const { server, userModel } = await initServer(serverConfigs);
+        await initApi(server, serverConfigs.pathToImgs, userModel);
         await server.start();
         const url = workingUrl();
         console.log('server started at', server.info.uri);
         console.log('Connection to the database has been established successfully.');
-        return { server, url, connectionDb: server.db() }; 
+        return { 
+            server,
+            url, 
+            connectionDb: server.db()
+        }; 
     } catch (err) {
         console.log('cant launch server or db', err);
         throw err;

@@ -20,30 +20,32 @@ export default class FileController {
     }
 
     public async getMe (req: Request, h: Response) {
-        const token = req.headers['authorization'];
-        if (!token) {
-            return h.unauthorized('invalid token');
-        }
         try {
+            const token = req.headers['authorization'];
             const decoded = jwt.verify(token, 'keyboardcat', {
                 algorithms: ['HS256']
             });
             return h.response(decoded);
         } catch (err) {
             console.log(err);
-            throw err;
+            return h.badImplementation();
         }
     }
 
     public async registerToken(req: Request, h: Response) {
-        const { username } = req.payload;
-        const { dataValues } = await this._userModel.create({
-            username
-        });
-        const token = jwt.sign({ id: dataValues.id, username: dataValues.username }, 'keyboardcat', {
-            algorithm: 'HS256'
-        });
-        return h.response({ auth: true, token});
+        try {
+            const { username } = req.payload;
+            const { dataValues } = await this._userModel.create({
+                username
+            });
+            const token = jwt.sign({ id: dataValues.id, username: dataValues.username }, 'keyboardcat', {
+                algorithm: 'HS256'
+            });
+            return h.response({ message: 'token register successfully', auth: true, token});
+        } catch (err) {
+            console.log(err);
+            return h.badImplementation();   
+        }
     }
 
     private async handleFileUpload (file: Readable, h: Response) {

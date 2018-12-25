@@ -21,7 +21,7 @@ export default async function createJwtPlugin(server: Server, configs: ServerCon
     }
 }
 
-async function setAuthStrategy(server: Server, configs: ServerConfigurations, validate: ValidateUser): Promise<void> {
+async function setAuthStrategy(server: Server, configs: ServerConfigurations, validate: ValidateUser) {
     server.auth.strategy('jwt', 'jwt',
     { key: configs.jwtSecret,          
         validate,           
@@ -36,5 +36,4 @@ async function setAuthStrategy(server: Server, configs: ServerConfigurations, va
     });
 
     server.auth.default("jwt");
-    return null;
 } 
