@@ -57,6 +57,7 @@ describe('app', () => {
 
     const clearDb = async (db: Sequelize) => {
         db.query('DROP TABLE files;');
+        db.query('DROP TABLE users;');
     };
     
     before(async () => {

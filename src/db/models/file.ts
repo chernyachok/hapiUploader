@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import { FileInstance, FileAttributes } from '../../types/fileModel';
+import { FileInstance, FileAttributes, FileModel } from '../../types/fileModel';
 
 export default async function createFileModel(connection: Sequelize.Sequelize): Promise<any> {
 

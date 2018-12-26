@@ -2,7 +2,7 @@ import initServer from './initServer';
 import initApi from '../files';
 import { ServerConfigurations } from '../configurations';
 
-export default async function startServer(serverConfigs: ServerConfigurations): Promise<void> {
+export default async function start(serverConfigs: ServerConfigurations): Promise<void> {
     try {
         const { server, userModel } = await initServer(serverConfigs);
         await initApi(server, serverConfigs.pathToImgs, userModel);
