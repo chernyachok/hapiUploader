@@ -3,18 +3,18 @@ import {
     jobModel,
     deleteValidator,
     updateValidator,
-    jwtValidator,
-    registerTokenValidator
+    jwtValidator
 } from './validator';
-import config from '../configurations/config.dev.json';
-import * as Path from 'path';
+import config from '../../configurations/config.dev.json';
+import * as path from 'path';
 import { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } from './utils';
-import { Server } from '../types/server';
+import { Server } from '../../types/server';
 import FileController from './controller';
-import { Request } from '../types/request';
-import { Response } from '../types/response';
+import { Request } from '../../types/request';
+import { Response } from '../../types/response';
+import { ServerConfigurations } from '../../configurations';
 
-export default async function(server: Server, fileController: FileController, staticFolder: string) {
+export default async function(server: Server, configs: ServerConfigurations, fileController: FileController) {
 
     server.route({
         method: 'GET',
@@ -22,32 +22,6 @@ export default async function(server: Server, fileController: FileController, st
         options: {
             auth: 'jwt',
             handler: fileController.getViewOfListOfFiles
-        }
-    });
-
-    server.route({
-        method: 'GET',
-        path: '/auth/me',
-        options: {
-            auth: false,
-            handler: fileController.getMe,
-            validate: {
-                headers: jwtValidator
-            },
-            description: 'Decode token',
-        }
-    });
-
-    server.route({
-        method: 'POST',
-        path: '/auth/register',
-        options: {
-            auth: false,
-            handler: fileController.registerToken,
-            validate: {
-                payload: registerTokenValidator
-            },
-            description: 'Encode payload into valid token',
         }
     });
 
@@ -71,7 +45,7 @@ export default async function(server: Server, fileController: FileController, st
             auth: 'jwt',
             handler: {
                 directory: {
-                    path: Path.join(process.cwd(), 'public', `${staticFolder}`)
+                    path: path.join(process.cwd(), 'public', configs.pathToImgs)
                 }
             },
             validate: {
@@ -117,7 +91,7 @@ export default async function(server: Server, fileController: FileController, st
             pre: [
                 {
                     assign: 'file',
-                    method: handleFileValidation('logo', getImageAllowedFormats())
+                    method: handleFileValidation('logo', getImageAllowedFormats(config.server.fileWhiteList))
                 }
             ],
             handler: fileController.saveLogo,
@@ -142,7 +116,7 @@ export default async function(server: Server, fileController: FileController, st
             pre: [
                 {
                     assign: 'file',
-                    method: handleFileValidation('file', getDocsAllowedFormats())
+                    method: handleFileValidation('file', getDocsAllowedFormats(config.server.fileWhiteList))
                 }
             ],
             handler: fileController.saveJob,
@@ -167,10 +141,10 @@ export default async function(server: Server, fileController: FileController, st
         }
     });
 
-    server.ext('onRequest', (req, h) => {
-        let { path } = req.url;
-        if (path.slice(-1) === '/') {
-            return h.redirect(path.slice(0, -1)).code(301).takeover();
+    server.ext('onRequest', (req: Request, h: Response) => {
+        let { path: urlPath } = req.url;
+        if (urlPath.slice(-1) === '/') {
+            return h.redirect(urlPath.slice(0, -1)).code(301).takeover();
         }
         return h.continue;
     });

@@ -10,10 +10,10 @@ export interface Readable extends ReadableStream {
 }
 
 export interface ReqPayload {
-    id?: number;
-    newFilename?: string;
-    file?: Readable;
-    logo?: Readable;
+    id: number;
+    newFilename: string;
+    file: Readable;
+    logo: Readable;
     username: string;
 }
 

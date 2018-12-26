@@ -1,9 +1,9 @@
 import axios from 'axios';
 import * as mime from 'mime';
-import { ClientError } from '../constants';
-import { getServerConfigs } from '../configurations';
-import { Request, Readable } from '../types/request';
-import { Response } from '../types/response';
+import { ClientError } from '../../constants';
+import { getServerConfigs } from '../../configurations';
+import { Request, Readable } from '../../types/request';
+import { Response } from '../../types/response';
 import { FileApiResult } from './types';
 
 type Validate = (file: Readable, allowedFormats: Array<string>) => boolean;
@@ -32,20 +32,11 @@ export const handleFileValidation = createFileValidationHandler(
     (file, allowedFormats) => filterFile(file)(allowedFormats)
 );
 
-export const getImageAllowedFormats = (): string[] => {
-    return  [
-            "image/png", 
-            "image/jpg", 
-            "image/jpeg"
-        ];
-};
+export const getImageAllowedFormats = (list: Array<string>) =>
+    list.filter(format => format.indexOf('image') !== -1);
 
-export const getDocsAllowedFormats = (): string[] => {
-    return [
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-};
+export const getDocsAllowedFormats = (list: Array<string>) => 
+    list.filter(format => format.indexOf('application') !== -1);
 
 export const workingUrl = (additional = ''): string => 
     protocol + '://' + host + ':' + port + additional;

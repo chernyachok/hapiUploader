@@ -1,14 +1,20 @@
-import createFileModel from '../db/models/file';
+import createFileModel from './dbModel';
 import FileController from './controller';
 import initRoutes from './routes';
-import { Server } from '../types/server';
-import { UserModel } from '../types/userModel';
+import { Server } from '../../types/server';
+import { ApiEnterOptions } from '../../types/common';
 
-export default async function init(server: Server, pathToImgs: string, userModel: UserModel): Promise<boolean> {
-    const fileModel = await createFileModel(server.db());
-    const fileController = new FileController(fileModel, userModel, pathToImgs);
+export default async function init(
+    server: Server,
+    {
+        serverConfigs,
+        dbConnection
+    }: ApiEnterOptions
+): Promise<boolean> {
+    const fileModel = await createFileModel(dbConnection);
+    const fileController = new FileController(fileModel, serverConfigs);
     server.bind(fileController);
-    await initRoutes(server, fileController, pathToImgs);
+    await initRoutes(server, serverConfigs, fileController);
 
     return true;
 }

@@ -2,7 +2,6 @@
     "server": {
         "plugins": [
             "boom",
-            "jwt-auth",
             "inert",
             "sequelize"
         ],

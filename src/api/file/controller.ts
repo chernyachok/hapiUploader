@@ -1,51 +1,21 @@
-import * as jwt from 'jsonwebtoken';
 import FileSystem from './fileSystem';
 import { workingUrl, getApi, getHtmlString } from './utils';
-import { ClientError } from '../constants';
-import { FileModel } from '../types/fileModel';
-import { Request, Readable } from '../types/request';
-import { Response } from '../types/response';
-import { UserModel } from '../types/userModel';
+import { ClientError } from '../../constants';
+import { FileModel } from '../../types/fileModel';
+import { Request, Readable } from '../../types/request';
+import { Response } from '../../types/response';
+import { ServerConfigurations } from '../../configurations';
 
 export default class FileController {
 
     private _fileModel: FileModel;
+    private _configs: ServerConfigurations;
     private _fileSystem: FileSystem;
-    private _userModel: UserModel;
 
-    constructor(fileModel: FileModel, userModel: UserModel, pathToImgs: string) {
+    constructor(fileModel: FileModel, serverConfigs: ServerConfigurations) {
         this._fileModel = fileModel;
-        this._userModel = userModel;
-        this._fileSystem = new FileSystem(pathToImgs);
-    }
-
-    public async getMe (req: Request, h: Response) {
-        try {
-            const token = req.headers['authorization'];
-            const decoded = jwt.verify(token, 'keyboardcat', {
-                algorithms: ['HS256']
-            });
-            return h.response(decoded);
-        } catch (err) {
-            console.log(err);
-            return h.badImplementation();
-        }
-    }
-
-    public async registerToken(req: Request, h: Response) {
-        try {
-            const { username } = req.payload;
-            const { dataValues } = await this._userModel.create({
-                username
-            });
-            const token = jwt.sign({ id: dataValues.id, username: dataValues.username }, 'keyboardcat', {
-                algorithm: 'HS256'
-            });
-            return h.response({ message: 'token register successfully', auth: true, token});
-        } catch (err) {
-            console.log(err);
-            return h.badImplementation();   
-        }
+        this._configs = serverConfigs;
+        this._fileSystem = new FileSystem(this._configs.pathToImgs);
     }
 
     private async handleFileUpload (file: Readable, h: Response) {
