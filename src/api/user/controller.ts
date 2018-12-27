@@ -2,6 +2,7 @@ import { UserModel } from "../../types/userModel";
 import { ServerConfigurations } from "../../configurations";
 import { Request } from '../../types/request';
 import { Response } from '../../types/response';
+import jwt from 'jsonwebtoken';
 
 export default class UserController {
 
@@ -16,7 +17,7 @@ export default class UserController {
     public async getMe (req: Request, h: Response) {
         try {
             const token = req.headers['authorization'];
-            const decoded = jwt.verify(token, 'keyboardcat', {
+            const decoded = jwt.verify(token, this._configs.jwtSecret, {
                 algorithms: ['HS256']
             });
             return h.response(decoded);
@@ -32,7 +33,7 @@ export default class UserController {
             const { dataValues } = await this._userModel.create({
                 username
             });
-            const token = jwt.sign({ id: dataValues.id, username: dataValues.username }, 'keyboardcat', {
+            const token = jwt.sign({ id: dataValues.id, username: dataValues.username }, this._configs.jwtSecret, {
                 algorithm: 'HS256'
             });
             return h.response({ message: 'token register successfully', auth: true, token});

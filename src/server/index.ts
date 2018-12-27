@@ -1,11 +1,13 @@
 import { init as initServer } from './initServer';
-import { init as initDb } from '../db/init';
 import { ServerConfigurations } from '../configurations';
+import InitModels from '../db';
 
 export default async function start(serverConfigs: ServerConfigurations): Promise<void> {
     try {
-        const dbConnection = await initDb(serverConfigs); 
-        const server = await initServer(serverConfigs, dbConnection);
+        const modelInstanse = new InitModels();
+        await modelInstanse.initialize(serverConfigs);
+        const modelList = modelInstanse.ModelList;
+        const server = await initServer(serverConfigs, modelList);
         await server.start();
         console.log(`server start at ${server.info.uri}`);
         console.log('Connection to the database has been established successfully.');

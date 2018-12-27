@@ -3,9 +3,13 @@
         "plugins": [
             "boom",
             "inert",
-            "sequelize"
+            "jwt-auth"
         ],
         "api": [
+            "file",
+            "user"
+        ],
+        "models": [
             "file",
             "user"
         ],

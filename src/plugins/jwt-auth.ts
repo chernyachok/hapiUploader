@@ -25,7 +25,7 @@ export default class JwtPlugin implements Plugin {
         server.auth.default("jwt");
     }
     
-    public async register(server: Server, { serverConfigs, userModel }: PluginOptions): Promise<void> {
+    public async register(server: Server, { serverConfigs, modelList }: PluginOptions): Promise<void> {
         try {
             await server.register(HapiJwt);
            

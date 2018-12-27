@@ -1,11 +1,29 @@
 import { Server } from "../../types/server";
 import { ServerConfigurations } from "../../configurations";
 import UserController from "./controller";
+import {
+    jwtValidator,
+    signupValidator
+} from './validator';
 
 export default async function(server: Server, configs: ServerConfigurations, userController: UserController) {
+
+    server.route({
+        method: 'GET',
+        path: '/users/me',
+        options: {
+            auth: false,
+            handler: userController.getMe,
+            validate: {
+                headers: jwtValidator
+            },
+            description: 'Decode token',
+        }
+    });
+    
     server.route({
         method: 'POST',
-        path: '/user/signup',
+        path: '/users/signup',
         options: {
             auth: false,
             handler: userController.signup,
@@ -16,16 +34,4 @@ export default async function(server: Server, configs: ServerConfigurations, use
         }
     });
 
-    server.route({
-        method: 'GET',
-        path: '/user/me',
-        options: {
-            auth: false,
-            handler: userController.getMe,
-            validate: {
-                headers: jwtValidator
-            },
-            description: 'Decode token',
-        }
-    });
 }

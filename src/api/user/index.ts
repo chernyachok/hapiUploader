@@ -7,9 +7,10 @@ export default async function init(
     server: Server,
     {
         serverConfigs,
-        userModel,
+        dbList,
     }: ApiEnterOptions
 ): Promise<boolean> {
+    const uModel = dbList.get('uModel');
     const userController = new UserController(userModel, serverConfigs);
     server.bind(userController);
     await initRoutes(server, serverConfigs, userController);
