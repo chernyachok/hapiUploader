@@ -1,15 +1,12 @@
 import * as Hapi from 'hapi';
 import { Server } from '../types/server';
 import { ServerConfigurations } from "../configurations";
-import createUserModel from '../api/user/dbModel'; 
 import config from '../configurations/config.dev.json';
-import { Sequelize } from 'sequelize';
 import { PluginConstructor } from '../types/plugin';
+import { Models } from '../db';
 
 
-
-export async function init(serverConfigs: ServerConfigurations, dbConnection: Sequelize): Promise<Server> {
-    const { port, host } = serverConfigs;
+export async function init({ port, host }: ServerConfigurations, modelList: Models): Promise<Server> {
     const server = new Hapi.Server({
         port,
         host,
@@ -20,8 +17,6 @@ export async function init(serverConfigs: ServerConfigurations, dbConnection: Se
         }
     }) as Server;
 
-    const userModel = await createUserModel(dbConnection);
-
     const pluginPromises: Array<Promise<void>> = [];
     const apiPromises: Array<Promise<void>> = [];
     const { plugins, api } = config.server;
@@ -29,14 +24,14 @@ export async function init(serverConfigs: ServerConfigurations, dbConnection: Se
     plugins.forEach((pluginName: string) => {
         const Plugin: PluginConstructor = require('../plugins/' + pluginName);
         const plugin = new Plugin();
-        pluginPromises.push(plugin.register(server, { serverConfigs, userModel }));
+        pluginPromises.push(plugin.register(server, { serverConfigs, modelList }));
     });
 
     await Promise.all(pluginPromises);
     
     api.forEach((apiName: string) => {
         const initApi = require('../api/' + apiName);
-        apiPromises.push(initApi(server, { serverConfigs, userModel, dbConnection }));
+        apiPromises.push(initApi(server, { serverConfigs, userModel }));
     });
 
     await Promise.all(apiPromises);

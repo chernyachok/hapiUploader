@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize, Model } from 'sequelize';
 import { readdirSync } from 'fs';
 import path from 'path';
 import { UserModel } from '../types/userModel';
@@ -9,23 +9,29 @@ export interface Models {
     fileModel?: FileModel;
 }
 
-type ModelsArr = UserModel | FileModel;
+type ModelObj = [string, Model<any, any>];
 
-type PromiseModels = Array<Promise<UserModel | FileModel>>;
+const getModels = () => {
+    const res = readdirSync(path.join(process.cwd(), 'db/models'));
+    return res.map((modelName: string) => modelName.split('.')[0]);
+};
 
-export const initModels = async (dbConn: Sequelize) => {
-    const modelNames: string[] = readdirSync(path.join(process.cwd(), 'db/models'), { encoding: 'utf8' });
-    const modelPromises: PromiseModels = [];
-    modelNames.forEach((modelName: string) => {
+const convertArrToObj = (resolvedModels: Array<ModelObj>) => {
+    return resolvedModels.reduce((acc, [modelName, modelObj]) => {
+        acc[modelName] = modelObj;
+
+        return acc;
+    }, {});
+};
+
+export const initModels = async (dbConn: Sequelize): Promise<Models> => {
+    const modelPromises = getModels().map(async (modelName: string): Promise<ModelObj> => {
         const model = require('./models/' + modelName);
-        modelPromises.push(model(dbConn));
+        const modelObj = await model(dbConn);
+
+        return [modelName, modelObj];
     });
 
-    let resolvedModels: Array<ModelsArr> = await Promise.all(modelPromises);
-    const res: Models = resolvedModels.reduce((currentvalue: object, element: ModelsArr, index: number) => {
-        currentvalue[modelNames[index]] = element;
-        return currentvalue;
-    }, {});
-
-    return res;
+    const resolvedModels = await Promise.all(modelPromises);
+    return convertArrToObj(resolvedModels);
 };

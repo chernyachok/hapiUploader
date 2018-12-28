@@ -9,10 +9,7 @@
             "file",
             "user"
         ],
-        "models": [
-            "file",
-            "user"
-        ],
+        "modelsFolder": "db/models",
         "fileMaxSize": 540128,
         "fileWhiteList": [
             "image/png", 
