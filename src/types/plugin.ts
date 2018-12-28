@@ -22,7 +22,3 @@ export interface PluginInfo {
     name: string;
     version: string;
 }
-
-export interface PluginConstructor {
-    new(): Plugin;
-}

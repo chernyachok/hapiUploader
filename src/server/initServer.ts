@@ -1,8 +1,8 @@
 import * as Hapi from 'hapi';
-import { Server } from '../types/server';
+import { Server } from '../types';
 import { ServerConfigurations } from "../configurations";
 import config from '../configurations/config.dev.json';
-import { Models } from '../db';
+import { Models } from '../db/types';
 
 
 export async function init(serverConfigs: ServerConfigurations, modelList: Models): Promise<Server> {

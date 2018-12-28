@@ -1,7 +1,7 @@
 import FileController from './controller';
 import initRoutes from './routes';
-import { Server } from '../../types/server';
-import { ApiEnterOptions } from '../../types/common';
+import { Server } from '../../types';
+import { ApiEnterOptions } from '../../types';
 
 export default async function init(
     server: Server,

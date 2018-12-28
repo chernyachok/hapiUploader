@@ -2,8 +2,11 @@ import axios from 'axios';
 import * as mime from 'mime';
 import { ClientError } from '../../constants';
 import { getServerConfigs } from '../../configurations';
-import { Request, Readable } from '../../types/request';
-import { Response } from '../../types/response';
+import { 
+    Request,
+    Readable,
+    Response,
+} from '../../types';
 import { FileApiResult } from './types';
 
 type Validate = (file: Readable, allowedFormats: Array<string>) => boolean;

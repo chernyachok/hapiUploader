@@ -1,13 +1,7 @@
 import { Sequelize, Model } from 'sequelize';
 import { readdirSync } from 'fs';
 import path from 'path';
-import { UserModel } from '../types/userModel';
-import { FileModel } from '../types/fileModel';
-
-export interface Models {
-    userModel?: UserModel;
-    fileModel?: FileModel;
-}
+import { Models } from './types';
 
 type ModelObj = [string, Model<any, any>];
 

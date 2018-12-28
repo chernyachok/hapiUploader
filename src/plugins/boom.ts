@@ -1,6 +1,6 @@
 import Boom from 'boom';
-import { Server } from '../types/server';
-import { PluginObject, Plugin } from '../types/plugin';
+import { Server } from '../types';
+import { PluginObject, Plugin } from '../types';
 
 const methods: string[] = [
     "badImplementation", // 500

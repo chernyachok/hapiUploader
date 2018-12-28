@@ -1,5 +1,5 @@
-import { Server } from '../types/server';
-import { Plugin } from "../types/plugin";
+import { Server } from '../types';
+import { Plugin } from "../types";
 
 export default class InertPlugin implements Plugin {
 

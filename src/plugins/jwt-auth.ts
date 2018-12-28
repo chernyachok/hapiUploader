@@ -1,8 +1,8 @@
 import * as HapiJwt from 'hapi-auth-jwt2';
-import { Server } from '../types/server';
+import { Server } from '../types';
 import { ServerConfigurations } from "../configurations";
 import { ClientError } from '../constants';
-import { Plugin, PluginOptions } from '../types/plugin';
+import { Plugin, PluginOptions } from '../types';
 
 type ValidateUser = (decoded: any) => Promise<{isValid: boolean}>;
 

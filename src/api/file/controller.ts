@@ -1,9 +1,9 @@
 import FileSystem from './fileSystem';
 import { workingUrl, getApi, getHtmlString } from './utils';
 import { ClientError } from '../../constants';
-import { FileModel } from '../../types/fileModel';
-import { Request, Readable } from '../../types/request';
-import { Response } from '../../types/response';
+import { FileModel } from '../../db/types';
+import { Request, Readable } from '../../types';
+import { Response } from '../../types';
 import { ServerConfigurations } from '../../configurations';
 
 export default class FileController {

@@ -1,4 +1,4 @@
-import { UserModel } from "../../types/userModel";
+import { UserModel } from "../../db/types";
 import { ServerConfigurations } from "../../configurations";
 import { Request } from '../../types/request';
 import { Response } from '../../types/response';
