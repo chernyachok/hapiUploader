@@ -25,12 +25,12 @@ export default class JwtPlugin implements Plugin {
         server.auth.default("jwt");
     }
     
-    public async register(server: Server, { serverConfigs, modelList }: PluginOptions): Promise<void> {
+    public async register(server: Server, { serverConfigs, modelList: { userModel } }: PluginOptions): Promise<void> {
         try {
             await server.register(HapiJwt);
            
             const validate: ValidateUser = async decoded => {
-                const response = await userModel.findOne({where: { id: decoded.id}});
+                const response = await userModel.findOne({ where: { id: decoded.id }});
                 return { isValid: !response ? false : true};
             };
             return this.setAuthStrategy(server, serverConfigs, validate);

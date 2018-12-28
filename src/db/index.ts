@@ -12,7 +12,7 @@ export interface Models {
 type ModelObj = [string, Model<any, any>];
 
 const getModels = () => {
-    const res = readdirSync(path.join(process.cwd(), 'db/models'));
+    const res = readdirSync(path.join(__dirname, 'models'));
     return res.map((modelName: string) => modelName.split('.')[0]);
 };
 
@@ -26,7 +26,7 @@ const convertArrToObj = (resolvedModels: Array<ModelObj>) => {
 
 export const initModels = async (dbConn: Sequelize): Promise<Models> => {
     const modelPromises = getModels().map(async (modelName: string): Promise<ModelObj> => {
-        const model = require('./models/' + modelName);
+        const model = require('./models/' + modelName).default;
         const modelObj = await model(dbConn);
 
         return [modelName, modelObj];
