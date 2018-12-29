@@ -5,8 +5,8 @@ export default class FileSystem {
 
     private _path: string;
 
-    constructor(pathToImgs: string) {
-        this._path = path.join(process.cwd(), 'public', pathToImgs);
+    constructor(uploadDir: string) {
+        this._path = path.join(process.cwd(), uploadDir);
     }
    
     async writeFile(fileName: string, data: Buffer): Promise<void> {

@@ -1,6 +1,6 @@
 import { Server } from "./server";
 import { ServerConfigurations } from "../configurations";
-import { Models } from "../db";
+import { Models } from "../db/types";
 
 export interface PluginOptions {
     modelList: Models;
@@ -21,4 +21,8 @@ export interface Plugin {
 export interface PluginInfo {
     name: string;
     version: string;
+}
+
+export interface PluginConstructor {
+    new(): Plugin;
 }

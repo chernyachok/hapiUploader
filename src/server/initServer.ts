@@ -1,7 +1,6 @@
 import * as Hapi from 'hapi';
-import { Server } from '../types';
+import { Server, PluginConstructor } from '../types';
 import { ServerConfigurations } from "../configurations";
-import config from '../configurations/config.dev.json';
 import { Models } from '../db/types';
 
 
@@ -12,15 +11,15 @@ export async function init(serverConfigs: ServerConfigurations, modelList: Model
         host,
         routes: {
             files: {
-                relativeTo : process.cwd() + config.server.uploadDir
+                relativeTo : process.cwd() + 'public'
             }
         }
     }) as Server;
 
-    const { plugins, api } = config.server;
+    const { plugins, api } = serverConfigs;
 
     const pluginPromises: Array<Promise<void>> = plugins.map((pluginName: string) => {
-        const Plugin = require('../plugins/' + pluginName).default;
+        const Plugin: PluginConstructor = require('../plugins/' + pluginName).default;
         const plugin = new Plugin();
         return plugin.register(server, { serverConfigs, modelList });
     });

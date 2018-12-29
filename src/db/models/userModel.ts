@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import { UserInstance, UserAttributes } from '../../types/userModel';
+import { UserInstance, UserAttributes } from '../types';
 
 export default async function createUserModel(connection: Sequelize.Sequelize): Promise<any> {
 

@@ -2,9 +2,9 @@ import { Server } from "../../types/server";
 import { ServerConfigurations } from "../../configurations";
 import UserController from "./controller";
 import {
-    jwtValidator,
     signupValidator
 } from './validator';
+import { jwtValidator } from "../../utils/validation";
 
 export default async function(server: Server, configs: ServerConfigurations, userController: UserController) {
 

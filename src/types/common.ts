@@ -1,5 +1,5 @@
 import { ServerConfigurations } from "../configurations";
-import { Models } from "../db";
+import { Models } from "../db/types";
 
 export interface ApiEnterOptions {
     serverConfigs: ServerConfigurations;

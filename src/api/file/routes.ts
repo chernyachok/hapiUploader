@@ -1,13 +1,12 @@
+import * as path from 'path';
 import {
     logoModel,
     jobModel,
     deleteValidator,
     updateValidator,
-    jwtValidator
 } from './validator';
-import config from '../../configurations/config.dev.json';
-import * as path from 'path';
-import { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } from './utils';
+import { jwtValidator } from '../../utils/validation';
+import { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } from '../../utils/file';
 import { Server } from '../../types/server';
 import FileController from './controller';
 import { Request } from '../../types/request';
@@ -45,7 +44,7 @@ export default async function(server: Server, configs: ServerConfigurations, fil
             auth: 'jwt',
             handler: {
                 directory: {
-                    path: path.join(process.cwd(), 'public', configs.pathToImgs)
+                    path: path.join(process.cwd(), configs.uploadDir)
                 }
             },
             validate: {
@@ -91,14 +90,14 @@ export default async function(server: Server, configs: ServerConfigurations, fil
             pre: [
                 {
                     assign: 'file',
-                    method: handleFileValidation('logo', getImageAllowedFormats(config.server.fileWhiteList))
+                    method: handleFileValidation('logo', getImageAllowedFormats(configs.fileWhiteList))
                 }
             ],
             handler: fileController.saveLogo,
             payload: {
                 output: 'stream',
                 allow: "multipart/form-data",
-                maxBytes: config.server.fileMaxSize
+                maxBytes: configs.fileMaxSize
             },
             validate: {
                 headers: jwtValidator,
@@ -116,14 +115,14 @@ export default async function(server: Server, configs: ServerConfigurations, fil
             pre: [
                 {
                     assign: 'file',
-                    method: handleFileValidation('file', getDocsAllowedFormats(config.server.fileWhiteList))
+                    method: handleFileValidation('file', getDocsAllowedFormats(configs.fileWhiteList))
                 }
             ],
             handler: fileController.saveJob,
             payload: {
                 output: 'stream',
                 allow: "multipart/form-data",
-                maxBytes: config.server.fileMaxSize
+                maxBytes: configs.fileMaxSize
             },
             validate: {
                 headers: jwtValidator,

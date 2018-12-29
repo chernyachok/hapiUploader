@@ -17,7 +17,3 @@ export const updateValidator = Joi.object().keys({
     id: Joi.number().positive().required(),
     newFilename: Joi.string().required()
 });
-
-export const jwtValidator = Joi.object({
-    authorization: Joi.string().required()
-}).unknown();

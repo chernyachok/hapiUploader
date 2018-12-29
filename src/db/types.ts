@@ -4,20 +4,20 @@ type InstanceExt<T> = {
     dataValues: T;
 };
 
-type UserInstance = Instance<UserAttributes> & UserAttributes & InstanceExt<UserAttributes>;
+export type UserInstance = Instance<UserAttributes> & UserAttributes & InstanceExt<UserAttributes>;
 
 export type UserModel = Model<UserInstance, UserAttributes>;
 
-interface UserAttributes {
+export interface UserAttributes {
     id?: number;
     username: string;
 }
 
-type FileInstance = Instance<FileAttributes> & FileAttributes & InstanceExt<FileAttributes>;
+export type FileInstance = Instance<FileAttributes> & FileAttributes & InstanceExt<FileAttributes>;
 
 export type FileModel = Model<FileInstance, FileAttributes>;
 
-interface FileAttributes {
+export interface FileAttributes {
     id?: number;
     filename: string;
     url: string;

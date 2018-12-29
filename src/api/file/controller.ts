@@ -1,10 +1,11 @@
 import FileSystem from './fileSystem';
-import { workingUrl, getApi, getHtmlString } from './utils';
+import { getApi, getHtmlString } from './utils';
 import { ClientError } from '../../constants';
 import { FileModel } from '../../db/types';
 import { Request, Readable } from '../../types';
 import { Response } from '../../types';
 import { ServerConfigurations } from '../../configurations';
+import { createUrl } from '../../utils/file';
 
 export default class FileController {
 
@@ -15,7 +16,7 @@ export default class FileController {
     constructor(fileModel: FileModel, serverConfigs: ServerConfigurations) {
         this._fileModel = fileModel;
         this._configs = serverConfigs;
-        this._fileSystem = new FileSystem(this._configs.pathToImgs);
+        this._fileSystem = new FileSystem(this._configs.uploadDir);
     }
 
     private async handleFileUpload (file: Readable, h: Response) {
@@ -27,7 +28,7 @@ export default class FileController {
                 return h.badRequest(ClientError.fileAlreadyExists);
             }
             await this._fileSystem.writeFile(filename, data);
-            const url = workingUrl('/files/' + filename);
+            const url = createUrl(this._configs.workingUrl, `/files/${filename}`);
             await this._fileModel.create({
                filename,
                url
@@ -49,7 +50,7 @@ export default class FileController {
 
     public async getViewOfListOfFiles(req: Request, h: Response) {
         try {
-            const url = workingUrl('/files');
+            const url = createUrl(this._configs.workingUrl, '/files');
             const data = await getApi(url);
             const files = getHtmlString(data);
             return h.response(files)
@@ -78,7 +79,7 @@ export default class FileController {
                 return h.badRequest(ClientError.fileNotExists);
             }
             await this._fileSystem.renameFile(response.dataValues.filename, newFilename);
-            const newUrl = workingUrl('/files/' + newFilename);
+            const newUrl = createUrl(this._configs.workingUrl, '/files/' + newFilename);
             await this._fileModel.update({filename: newFilename, url: newUrl}, {where: {id}});
             return h.response({message: 'updated successfully'}).code(200);
         }  catch (err) {

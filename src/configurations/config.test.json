@@ -1,6 +1,5 @@
 {
     "server": {
-        "workingUrl": "http://localhost:8000",
         "plugins": [
             "boom",
             "inert",
@@ -18,6 +17,6 @@
             "application/msword",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ],
-        "uploadDir": "public/files"
+        "uploadDir": "public/files-test"
     }
 }

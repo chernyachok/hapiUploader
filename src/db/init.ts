@@ -2,9 +2,7 @@ import Sequelize from 'sequelize';
 import { ServerConfigurations } from '../configurations';
 
 export async function init(serverConfigs: ServerConfigurations): Promise<Sequelize.Sequelize> {
-    const { dbName, dbUser, dbUserPass, dbDialect } = serverConfigs;
-        const dbConnection = new Sequelize(dbName, dbUser, dbUserPass, {
-            dialect: dbDialect,
+        const dbConnection = new Sequelize(serverConfigs.dbUri, {
             define: {
                 freezeTableName: true,
                 timestamps: false

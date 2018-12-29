@@ -1,8 +1,8 @@
+import jwt from 'jsonwebtoken';
 import { UserModel } from "../../db/types";
 import { ServerConfigurations } from "../../configurations";
 import { Request } from '../../types/request';
 import { Response } from '../../types/response';
-import jwt from 'jsonwebtoken';
 
 export default class UserController {
 
@@ -36,7 +36,7 @@ export default class UserController {
             const token = jwt.sign({ id: dataValues.id, username: dataValues.username }, this._configs.jwtSecret, {
                 algorithm: 'HS256'
             });
-            return h.response({ message: 'token register successfully', auth: true, token});
+            return h.response({ message: 'token registered successfully', auth: true, token});
         } catch (err) {
             console.log(err);
             return h.badImplementation();   
