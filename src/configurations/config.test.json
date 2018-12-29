@@ -1,5 +1,6 @@
 {
     "server": {
+        "workingUrl": "http://localhost:8006",
         "plugins": [
             "boom",
             "inert",
