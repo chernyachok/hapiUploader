@@ -84,7 +84,7 @@ export default async function(server: Server, configs: ServerConfigurations, fil
 
     server.route({
         method: 'POST',
-        path: '/users/logo',
+        path: '/files/logo',
         options: {
             auth: 'jwt',
             pre: [
@@ -109,7 +109,7 @@ export default async function(server: Server, configs: ServerConfigurations, fil
 
     server.route({
         method: 'POST',
-        path: '/users/jobs',
+        path: '/files/jobs',
         options: {
             auth: 'jwt',
             pre: [

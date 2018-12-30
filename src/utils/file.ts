@@ -5,6 +5,7 @@ import {
     Readable,
     Response,
 } from '../types';
+import { getServerConfigs } from '../configurations';
 
 type Validate = (file: Readable, allowedFormats: Array<string>) => boolean;
 
@@ -36,5 +37,7 @@ export const getImageAllowedFormats = (list: Array<string>) =>
 export const getDocsAllowedFormats = (list: Array<string>) => 
     list.filter(format => format.indexOf('application') !== -1);
 
-export const createUrl = (baseUrl: string, additional: string) =>
-    baseUrl + additional;
+const { port, host } = getServerConfigs();
+
+export const createUrl = (additional: string = '') =>
+    'http://' + host + ':' + port + additional;

@@ -6,12 +6,12 @@ import { ReadStream } from 'fs-extra';
 export const createFormData = () => {
     const formData = new FormData();
     return formData;
-}
+};
 
 export const getFileStream = (fileName: string): ReadStream => {
     const fileStream = fs.createReadStream(path.join(__dirname, 'mocks', fileName));
     return fileStream;
-}
+};
 
 export const appendFiles = (formData: FormData, fileNames: string[], fieldName: string = 'file') => {
     fileNames.forEach(fileName => {
@@ -21,4 +21,4 @@ export const appendFiles = (formData: FormData, fileNames: string[], fieldName: 
       });
     
       return formData;
-}
+};

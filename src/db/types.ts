@@ -15,7 +15,9 @@ export interface UserAttributes {
 
 export type FileInstance = Instance<FileAttributes> & FileAttributes & InstanceExt<FileAttributes>;
 
-export type FileModel = Model<FileInstance, FileAttributes>;
+export type FileModel = Model<FileInstance, FileAttributes> & {
+    sync(): Promise<void>;
+};
 
 export interface FileAttributes {
     id?: number;

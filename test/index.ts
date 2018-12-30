@@ -1,1 +1,2 @@
-require('./files/api.test');
+require('./file/api.test');
+require('./user/api.test');

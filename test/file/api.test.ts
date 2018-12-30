@@ -6,14 +6,16 @@ import { file, newUser } from '../mocks/data';
 import { createFormData, appendFiles } from '../utils';
 import { ClientError } from '../../src/constants';
 import { Server } from '../../src/types/server';
-
+import { createUrl } from '../../src/utils/file';
 import FormData from 'form-data';
+import { ServerConfigurations } from '../../src/configurations';
 
 describe('app', () => {
 
     let server: Server;
     let url: string;
-    let connectionDb: Sequelize;
+    let serverConfigs: ServerConfigurations;
+    let dbConn: Sequelize;
     let token: string;
 
     const getAllFiles = async () => 
@@ -26,7 +28,7 @@ describe('app', () => {
     const uploadLogo = async (payload: Buffer, headers: FormData.Headers) => 
         server.inject({
             method: 'POST',
-            url: url + '/users/logo',
+            url: url + '/files/logo',
             payload,
             headers: { ...headers, authorization: token }
         });
@@ -34,7 +36,7 @@ describe('app', () => {
     const uploadJob = async (payload: Buffer, headers: FormData.Headers) => 
         server.inject({
             method: 'POST',
-            url: url + '/users/jobs',
+            url: url + '/files/jobs',
             payload,
             headers: { ...headers, authorization: token }
         });
@@ -61,7 +63,8 @@ describe('app', () => {
     };
     
     before(async () => {
-        ({ server, url, connectionDb } = await startServer());
+        ({ server, serverConfigs, dbConn } = await startServer());
+        url = createUrl();
 
         const res = await server.inject({
             method: 'POST',
@@ -212,6 +215,6 @@ describe('app', () => {
     });
 
     after(async () => {
-        clearDb(connectionDb);
+        clearDb(dbConn);
     });
 });
