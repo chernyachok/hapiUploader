@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import { UserInstance, UserAttributes } from '../types';
 
-export default async function createUserModel(connection: Sequelize.Sequelize): Promise<any> {
+export default async function createUserModel(connection: Sequelize.Sequelize) {
 
     const userModel = connection.define<UserInstance, UserAttributes>('users', {
         id: {
@@ -12,6 +12,10 @@ export default async function createUserModel(connection: Sequelize.Sequelize): 
         },
         username: {
             type: Sequelize.STRING,
+            allowNull: false
+        },
+        password: {
+            type: Sequelize.STRING(10),
             allowNull: false
         }
     });

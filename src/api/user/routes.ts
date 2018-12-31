@@ -1,10 +1,10 @@
-import { Server } from "../../types/server";
+import { Server } from "../../types";
 import { ServerConfigurations } from "../../configurations";
 import UserController from "./controller";
 import {
-    signupValidator
+    createUserValidator
 } from './validator';
-import { jwtValidator } from "../../utils/validation";
+import { jwtValidator, idParamValidator } from "../../utils/validation";
 
 export default async function(server: Server, configs: ServerConfigurations, userController: UserController) {
 
@@ -17,20 +17,46 @@ export default async function(server: Server, configs: ServerConfigurations, use
             validate: {
                 headers: jwtValidator
             },
-            description: 'Decode token',
+            description: "Receive user by jwt-token.",
         }
     });
     
     server.route({
         method: 'POST',
-        path: '/users/signup',
+        path: '/users',
         options: {
             auth: false,
-            handler: userController.signup,
+            handler: userController.createUser,
             validate: {
-                payload: signupValidator
+                payload: createUserValidator
             },
-            description: 'Encode payload into valid token',
+            description: "Create new user and receive token",
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/users/{id}',
+        options: {
+            auth: 'jwt',
+            handler: userController.getUser,
+            validate: {
+                params: idParamValidator
+            },
+            description: "Get user by id.",
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/users',
+        options: {
+            auth: 'jwt',
+            handler: userController.getUsers,
+            validate: {
+                headers: jwtValidator
+            },
+            description: "Get all users",
         }
     });
 

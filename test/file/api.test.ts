@@ -8,13 +8,11 @@ import { ClientError } from '../../src/constants';
 import { Server } from '../../src/types/server';
 import { createUrl } from '../../src/utils/file';
 import FormData from 'form-data';
-import { ServerConfigurations } from '../../src/configurations';
 
-describe('app', () => {
+describe('Files API', () => {
 
     let server: Server;
     let url: string;
-    let serverConfigs: ServerConfigurations;
     let dbConn: Sequelize;
     let token: string;
 
@@ -59,16 +57,15 @@ describe('app', () => {
 
     const clearDb = async (db: Sequelize) => {
         db.query('DROP TABLE files;');
-        db.query('DROP TABLE users;');
     };
     
     before(async () => {
-        ({ server, serverConfigs, dbConn } = await startServer());
+        ({ server, dbConn } = await startServer());
         url = createUrl();
 
         const res = await server.inject({
             method: 'POST',
-            url: url + '/auth/register',
+            url: url + '/users',
             payload: newUser
         });
 
@@ -83,9 +80,9 @@ describe('app', () => {
         expect(parsedPayload).to.be.an("array");
     });
 
-    // /users/logo - only images
+    // /files/logo - only images
 
-    it('POST /users/logo -Should upload valid format logo and return 201', async () => {
+    it('POST /files/logo -Should upload valid format logo and return 201', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames[0], 'logo'); // .png
 
@@ -99,7 +96,7 @@ describe('app', () => {
         expect(parsedPayload).to.have.property("message");
     });
 
-    it('POST /users/logo -Should upload invalid format logo and return 422', async () => {
+    it('POST /files/logo -Should upload invalid format logo and return 422', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames[1], 'logo'); // .doc
 
@@ -113,7 +110,7 @@ describe('app', () => {
         expect(parsedPayload.message).to.equal(ClientError.invalidFileFormat);
     });
 
-    it('POST /users/logo -Should upload a file that already exists and return 400', async () => {
+    it('POST /files/logo -Should upload a file that already exists and return 400', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames[0], 'logo'); // .png
 
@@ -128,7 +125,7 @@ describe('app', () => {
     });
 
 
-    it('POST /users/logo - Should download logo with too large size, returns 413', async () => {
+    it('POST /files/logo - Should download logo with too large size, returns 413', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames[2], 'logo');
 
@@ -140,9 +137,9 @@ describe('app', () => {
         expect(response.statusCode).to.equal(413);
     });
 
-    // /users/jobs -only docs
+    // /files/jobs -only docs
 
-    it('POST /users/jobs -Should upload valid format file and return 201', async () => {
+    it('POST /files/jobs -Should upload valid format file and return 201', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames[1]); // .doc
 
@@ -156,7 +153,7 @@ describe('app', () => {
         expect(parsedPayload).to.have.property("message");
     });
 
-    it('POST /users/jobs -Should upload invalid format file and return 422', async () => {
+    it('POST /files/jobs -Should upload invalid format file and return 422', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames[4]); // .odt
 
@@ -170,7 +167,7 @@ describe('app', () => {
         expect(parsedPayload.message).to.equal(ClientError.invalidFileFormat);
     });
 
-    it('POST /users/jobs - Should download file with too large size, returns 413', async () => {
+    it('POST /files/jobs - Should download file with too large size, returns 413', async () => {
         const formData = createFormData();
         appendFiles(formData, file.filenames[2]); // large image
 

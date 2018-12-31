@@ -15,6 +15,7 @@ export interface ReqPayload {
     file: Readable;
     logo: Readable;
     username: string;
+    password: string;
 }
 
 export interface Request extends RequestExtended {

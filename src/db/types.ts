@@ -11,6 +11,7 @@ export type UserModel = Model<UserInstance, UserAttributes>;
 export interface UserAttributes {
     id?: number;
     username: string;
+    password: string;
 }
 
 export type FileInstance = Instance<FileAttributes> & FileAttributes & InstanceExt<FileAttributes>;

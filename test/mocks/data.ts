@@ -11,6 +11,6 @@ export const file = {
 };
 
 export const newUser = {
-    id: 55,
-    username: 'anton'
+    username: 'ivan',
+    password: '123'
 };
