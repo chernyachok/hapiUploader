@@ -1,25 +1,17 @@
 import { UserModel } from "../../db/types";
-import { ServerConfigurations } from "../../configurations";
 import { Request } from '../../types';
 import { Response } from '../../types';
 import { generateToken, decodeToken } from './utils';
 import { ClientError } from "../../constants";
+import { ApiController } from "../apiController";
 
-export default class UserController {
-
-    private _userModel: UserModel;
-    private _configs: ServerConfigurations;
-
-    constructor(userModel: UserModel, serverConfigs: ServerConfigurations) {
-        this._userModel = userModel;
-        this._configs = serverConfigs;
-    }
+export default class UserController extends ApiController<UserModel> {
 
     public async getMe (req: Request, h: Response) {
         try {
             const token = req.headers['authorization'];
             const decodedToken = decodeToken(token, this._configs.jwtSecret);
-            const user = await this._userModel.findOne({ where: {id: decodedToken.id}});
+            const user = await this.model.findOne({ where: {id: decodedToken.id}});
             if (!user) {
                 return h.badRequest(ClientError.userNotExists);
             }
@@ -33,7 +25,7 @@ export default class UserController {
     public async createUser(req: Request, h: Response) {
         try {
             const { username, password } = req.payload;
-            const { dataValues } = await this._userModel.create({
+            const { dataValues } = await this.model.create({
                 username,
                 password,
             });
@@ -52,7 +44,7 @@ export default class UserController {
     public async getUser(req: Request, h: Response) {
         try {
             const { id } = req.params;
-            const user = await this._userModel.findOne({ where: {id}});
+            const user = await this.model.findOne({ where: {id}});
 
             if (!user) {
                 return h.notFound(ClientError.userNotExists);
@@ -67,7 +59,7 @@ export default class UserController {
 
     public async getUsers(req: Request, h: Response) {
         try {
-            const users = await this._userModel.findAll();
+            const users = await this.model.findAll();
 
             return h.response(users);
         } catch (err) {

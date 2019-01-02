@@ -6,16 +6,17 @@ import { Request, Readable } from '../../types';
 import { Response } from '../../types';
 import { ServerConfigurations } from '../../configurations';
 import { createUrl } from '../../utils/file';
+import { ApiController } from '../apiController';
 
-export default class FileController {
+export default class FileController extends ApiController<FileModel> {
 
-    private _fileModel: FileModel;
-    private _configs: ServerConfigurations;
     private _fileSystem: FileSystem;
 
-    constructor(fileModel: FileModel, serverConfigs: ServerConfigurations) {
-        this._fileModel = fileModel;
-        this._configs = serverConfigs;
+    constructor(
+        fileModel: FileModel,
+        configs: ServerConfigurations
+    ) {
+        super(fileModel, configs);
         this._fileSystem = new FileSystem(this._configs.uploadDir);
     }
 
@@ -29,7 +30,7 @@ export default class FileController {
             }
             await this._fileSystem.writeFile(filename, data);
             const url = createUrl(`/files/${filename}`);
-            await this._fileModel.create({
+            await this.model.create({
                filename,
                url
             });
@@ -41,7 +42,7 @@ export default class FileController {
 
     public async getListOfFiles(req: Request, h: Response) {
         try {
-            const files = await this._fileModel.findAll();
+            const files = await this.model.findAll();
             return h.response(files).code(200);
         }  catch (err) {
                 return h.badImplementation();
@@ -74,13 +75,13 @@ export default class FileController {
     public async updateFile(req: Request, h: Response) {
         try {
             const {id, newFilename} = req.payload;
-            const response = await this._fileModel.findOne({where: { id }});
+            const response = await this.model.findOne({where: { id }});
             if (response === null) {
                 return h.badRequest(ClientError.fileNotExists);
             }
             await this._fileSystem.renameFile(response.dataValues.filename, newFilename);
             const newUrl = createUrl(`/files/${newFilename}`);
-            await this._fileModel.update({filename: newFilename, url: newUrl}, {where: {id}});
+            await this.model.update({filename: newFilename, url: newUrl}, {where: {id}});
             return h.response({message: 'updated successfully'}).code(200);
         }  catch (err) {
                 return h.badImplementation();
@@ -90,12 +91,12 @@ export default class FileController {
     public async deleteFile(req: Request, h: Response) {
         try {
             const { id } = req.payload;
-            const response = await this._fileModel.findOne({where: {id}});
+            const response = await this.model.findOne({where: {id}});
             if (response === null) {
                 return h.badRequest(ClientError.fileNotExists);
             }
             await this._fileSystem.removeFile(response.dataValues.filename);
-            await this._fileModel.destroy({where: { id }});
+            await this.model.destroy({where: { id }});
             return h.response({message: 'deleted successfully'}).code(200);
         }  catch (err) {
                 return h.badImplementation();
