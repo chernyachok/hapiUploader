@@ -8,12 +8,12 @@ import {
 import { jwtValidator } from '../../utils/validation';
 import { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } from '../../utils/file';
 import { Server } from '../../types/server';
-import FileController from './controller';
 import { Request } from '../../types/request';
 import { Response } from '../../types/response';
 import { ServerConfigurations } from '../../configurations';
+import FileReqHandler from './fileDAL';
 
-export default async function(server: Server, configs: ServerConfigurations, fileController: FileController) {
+export default async function(server: Server, configs: ServerConfigurations, fileController: FileReqHandler) {
 
     server.route({
         method: 'GET',

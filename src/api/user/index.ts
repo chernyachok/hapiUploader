@@ -13,8 +13,8 @@ export default async function init(
 ): Promise<boolean> {
     const userController = new UserController(userModel, serverConfigs);
     const userDal = new UserDal(userController);
-    server.bind(userController);
-    await initRoutes(server, serverConfigs, userController);
+    server.bind(userDal);
+    await initRoutes(server, serverConfigs, userDal);
 
     return true;
 }

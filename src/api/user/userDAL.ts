@@ -22,7 +22,7 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
         }
     }
 
-    public async createUser(req: Request, h: Response) {
+    public async createUser(req: Request, h: Response) { 
         try {
             const { username, password } = req.payload;
             const token = await this.controller.createUser(username, password);
