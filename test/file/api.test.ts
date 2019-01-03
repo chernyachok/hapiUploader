@@ -9,10 +9,12 @@ import { Server } from '../../src/types/server';
 import { createUrl } from '../../src/utils/file';
 import FormData from 'form-data';
 import * as fs from 'fs-extra';
+import { ServerConfigurations } from '../../src/configurations';
 
 describe('Files API', () => {
 
     let server: Server;
+    let serverConfigs: ServerConfigurations;
     let url: string;
     let dbConn: Sequelize;
     let token: string;
@@ -58,14 +60,14 @@ describe('Files API', () => {
 
     const clearDb = async (db: Sequelize) => {
         await db.query('DROP TABLE files;');
-        const files = fs.readdirSync(process.cwd() + '/public/files-test');
+        const files = fs.readdirSync(process.cwd() + '/' + serverConfigs.uploadDir);
         files.forEach(async (filename: string) => {
-            fs.unlink(process.cwd() + '/public/files-test' + `/${filename}`);
+            fs.unlink(process.cwd() + '/' + serverConfigs.uploadDir + `/${filename}`);
         });
     };
     
     before(async () => {
-        ({ server, dbConn } = await startServer());
+        ({ server, serverConfigs, dbConn } = await startServer());
         url = createUrl();
 
         const res = await server.inject({
