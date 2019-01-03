@@ -55,8 +55,12 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
             const {id, newFilename} = req.payload;
             await this.controller.updateFile(id , newFilename);
             return h.response({message: 'updated successfully'}).code(200);
-        }  catch (err) {
+        } catch (err) {
+            if (err.isBoom) {
+                return err;
+            } else {
                 return h.badImplementation();
+            }
         }
     }
 
@@ -65,8 +69,12 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
             const { id } = req.payload;
             await this.controller.deleteFile(id);
             return h.response({message: 'deleted successfully'}).code(200);
-        }  catch (err) {
+        } catch (err) {
+            if (err.isBoom) {
+                return err;
+            } else {
                 return h.badImplementation();
+            }
         }
     }
 }

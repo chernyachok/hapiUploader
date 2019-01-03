@@ -17,7 +17,6 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
 
            return h.response(user);
         } catch (err) {
-            console.log(err);
             return h.badImplementation();
         }
     }
@@ -28,7 +27,6 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
             const token = await this.controller.createUser(username, password);
             return h.response({ message: 'token registered successfully', auth: true, token}).code(201);
         } catch (err) {
-            console.log(err);
             return h.badImplementation();   
         }
     }
@@ -36,7 +34,7 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
     public async getUser(req: Request, h: Response) {
         try {
             const { id } = req.params;
-            const user = this.controller.getUser(id);
+            const user = await this.controller.getUser(id);
 
             if (!user) {
                 return h.notFound(ClientError.userNotExists);
@@ -44,7 +42,6 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
 
             return h.response(user);
         } catch (err) {
-            console.log(err);
             return h.badImplementation();
         }
     }
@@ -55,7 +52,6 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
 
             return h.response(users);
         } catch (err) {
-            console.log(err);
             return h.badImplementation();
         }
     }

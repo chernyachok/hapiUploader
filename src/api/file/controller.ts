@@ -51,24 +51,22 @@ export default class FileController extends ApiController<FileModel> {
 
             const response = await this.model.findOne({where: { id }});
             if (response === null) {
-                throw (ClientError.fileNotExists);
+                throw this._boom.badRequest(ClientError.fileNotExists);
             }
             await this._fileSystem.renameFile(response.dataValues.filename, newFilename);
             const newUrl = createUrl(`/files/${newFilename}`);
             await this.model.update({filename: newFilename, url: newUrl}, {where: {id}});
-            
-            return Promise.resolve();
+
     }
 
     public async deleteFile(id: number) {
 
             const response = await this.model.findOne({where: {id}});
             if (response === null) {
-                throw (ClientError.fileNotExists);
+                throw this._boom.badRequest(ClientError.fileNotExists);
             }
             await this._fileSystem.removeFile(response.dataValues.filename);
             await this.model.destroy({where: { id }});
-            
-            return Promise.resolve();
+
     }
 }

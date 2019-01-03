@@ -1,14 +1,4 @@
-import * as Boom from 'boom';
 import { ResponseToolkit as ResponseExtended} from 'hapi';
-
-type BoomCreator = (message?: string) => Boom;
+import { IBoomMethods } from './common';
 
 export interface Response extends ResponseExtended, IBoomMethods {}
-
-export interface IBoomMethods {
-    badImplementation: BoomCreator;
-    notFound: BoomCreator;
-    badData: BoomCreator;
-    unauthorized: BoomCreator;
-    badRequest: BoomCreator;
-}
