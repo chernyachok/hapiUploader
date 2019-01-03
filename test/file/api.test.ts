@@ -8,6 +8,7 @@ import { ClientError } from '../../src/constants';
 import { Server } from '../../src/types/server';
 import { createUrl } from '../../src/utils/file';
 import FormData from 'form-data';
+import * as fs from 'fs-extra';
 
 describe('Files API', () => {
 
@@ -56,7 +57,11 @@ describe('Files API', () => {
         });
 
     const clearDb = async (db: Sequelize) => {
-        db.query('DROP TABLE files;');
+        await db.query('DROP TABLE files;');
+        const files = fs.readdirSync(process.cwd() + '/public/files-test');
+        files.forEach(async (filename: string) => {
+            fs.unlink(process.cwd() + '/public/files-test' + `/${filename}`);
+        });
     };
     
     before(async () => {
