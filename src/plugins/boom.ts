@@ -20,10 +20,18 @@ export default class BoomPlugin implements Plugin {
             name: "Boom",
             version: "1.0.0",
             register: async function (server: Server) {
-                methods.forEach(method => {
+                methods.forEach((method: string) => {
                     const boomHandler = (message: string) => Boom[method](message);
                     server.decorate('toolkit', method, boomHandler);
-                }); 
+                });
+                
+                const boom = methods.reduce((acc, method) => {
+                    acc[method] = (message: string) => Boom[method](message);
+
+                    return acc;
+                }, {});
+                const serverBoomMethods = () => boom;
+                server.decorate('server', 'boom', serverBoomMethods);
             }
         };
     }

@@ -12,7 +12,11 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
             await this.controller.handleFileUpload(filename, data);
             return h.response({message: 'file uploaded succcesfully'}).code(201);
         } catch (err) {
+            if (err.isBoom) {
+                return err;
+            } else {
                 return h.badImplementation();
+            }
         }
     }
 

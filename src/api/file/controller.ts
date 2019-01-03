@@ -5,6 +5,7 @@ import { FileModel } from '../../db/types';
 import { ServerConfigurations } from '../../configurations';
 import { createUrl } from '../../utils/file';
 import { ApiController } from '../apiController';
+import { IBoomMethods } from '../../types';
 
 export default class FileController extends ApiController<FileModel> {
 
@@ -12,26 +13,27 @@ export default class FileController extends ApiController<FileModel> {
 
     constructor(
         fileModel: FileModel,
-        configs: ServerConfigurations
+        configs: ServerConfigurations,
+        boom: IBoomMethods
     ) {
-        super(fileModel, configs);
+        super(fileModel, configs, boom);
         this._fileSystem = new FileSystem(this._configs.uploadDir);
     }
 
     public async handleFileUpload (filename: string, data: Buffer) {
 
             const isExist = this._fileSystem.isExist(filename);
+            
             if (isExist) {
-                throw (ClientError.fileAlreadyExists);
+                throw this._boom.badRequest(ClientError.fileAlreadyExists);
             }
+            
             await this._fileSystem.writeFile(filename, data);
             const url = createUrl(`/files/${filename}`);
             await this.model.create({
                filename,
                url
             });
-
-            return Promise.resolve();
     }
 
     public async getListOfFiles() {

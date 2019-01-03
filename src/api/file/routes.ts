@@ -11,7 +11,7 @@ import { Server } from '../../types/server';
 import { Request } from '../../types/request';
 import { Response } from '../../types/response';
 import { ServerConfigurations } from '../../configurations';
-import FileReqHandler from './fileDAL';
+import FileReqHandler from './DAL';
 
 export default async function(server: Server, configs: ServerConfigurations, fileController: FileReqHandler) {
 

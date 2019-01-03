@@ -4,7 +4,7 @@ import {
     createUserValidator
 } from './validator';
 import { jwtValidator, idParamValidator } from "../../utils/validation";
-import UserReqHandler from "./userDAL";
+import UserReqHandler from "./DAL";
 
 export default async function(server: Server, configs: ServerConfigurations, userController: UserReqHandler) {
 
