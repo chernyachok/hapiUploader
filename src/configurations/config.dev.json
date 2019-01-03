@@ -1,0 +1,22 @@
+{
+    "server": {
+        "plugins": [
+            "boom",
+            "inert",
+            "jwt-auth"
+        ],
+        "api": [
+            "file",
+            "user"
+        ],
+        "fileMaxSize": 540128,
+        "fileWhiteList": [
+            "image/png", 
+            "image/jpg", 
+            "image/jpeg",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ],
+        "uploadDir": "public/files"
+    }
+}

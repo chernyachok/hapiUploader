@@ -1,6 +1,6 @@
 node_modules
-app1.js
-app2.js
-appfs.js
-apptest.js
-public/imgs/**
+public/files/**
+public/files-test/**
+.env
+.env.test
+build

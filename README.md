@@ -1,2 +1,2 @@
-Simple RESTful Api based on Hapi.js framework, provided by tests
-Powered by LowDB
+Simple RESTful Api based on Hapi.js framework, provided by tests.
+Powered by LowDB + MySQL Server.
