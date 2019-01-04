@@ -3,12 +3,11 @@ import streamToPromise from 'stream-to-promise';
 import { Sequelize } from 'sequelize';
 import startServer from '../init';
 import { file, newUser } from '../mocks/data';
-import { createFormData, appendFiles } from '../utils';
+import { createFormData, appendFiles, clearDirectory } from '../utils';
 import { ClientError } from '../../src/constants';
 import { Server } from '../../src/types/server';
 import { createUrl } from '../../src/utils/file';
 import FormData from 'form-data';
-import * as fs from 'fs-extra';
 import { ServerConfigurations } from '../../src/configurations';
 
 describe('Files API', () => {
@@ -60,10 +59,7 @@ describe('Files API', () => {
 
     const clearDb = async (db: Sequelize) => {
         await db.query('DROP TABLE files;');
-        const files = fs.readdirSync(process.cwd() + '/' + serverConfigs.uploadDir);
-        files.forEach(async (filename: string) => {
-            fs.unlink(process.cwd() + '/' + serverConfigs.uploadDir + `/${filename}`);
-        });
+        clearDirectory(process.cwd() + '/' + serverConfigs.uploadDir);
     };
     
     before(async () => {
