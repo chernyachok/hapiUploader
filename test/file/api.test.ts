@@ -214,7 +214,7 @@ describe('Files API', () => {
     it('DELETE /files - Should delete non-existing file and return 404', async () => {
         const response = await deleteFile({id: file.badId});
         const parsedPayload = JSON.parse(response.payload);
-        expect(parsedPayload.statusCode).to.equal(400);
+        expect(parsedPayload.statusCode).to.equal(404);
         expect(parsedPayload.message).to.equal(ClientError.fileNotExists);
     });
 

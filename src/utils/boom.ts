@@ -5,6 +5,6 @@ export const boomDictionary = {
     [ClientError.invalidToken]: () => Boom.unauthorized(ClientError.invalidToken),
     [ClientError.userNotExists]: () => Boom.notFound(ClientError.userNotExists),
     [ClientError.invalidFileFormat]: () => Boom.badData(ClientError.invalidFileFormat),
-    [ClientError.fileAlreadyExists]: () => Boom.badRequest(ClientError.invalidFileFormat),
-    [ClientError.fileNotExists]: () => Boom.notFound(ClientError.invalidFileFormat)
+    [ClientError.fileAlreadyExists]: () => Boom.badRequest(ClientError.fileAlreadyExists),
+    [ClientError.fileNotExists]: () => Boom.notFound(ClientError.fileNotExists)
 };

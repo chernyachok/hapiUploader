@@ -13,7 +13,7 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
             await this.controller.handleFileUpload(filename, data);
             return h.response({message: 'file uploaded succcesfully'}).code(201);
         } catch (err) {
-            handleErrorToBoom(err.message);
+            err = handleErrorToBoom(err.message);
             if (err.isBoom) {
                 return err;
             } else {
@@ -58,6 +58,7 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
             await this.controller.updateFile(id , newFilename);
             return h.response({message: 'updated successfully'}).code(200);
         } catch (err) {
+            err = handleErrorToBoom(err.message);
             if (err.isBoom) {
                 return err;
             } else {
@@ -72,6 +73,7 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
             await this.controller.deleteFile(id);
             return h.response({message: 'deleted successfully'}).code(200);
         } catch (err) {
+            err = handleErrorToBoom(err.message);
             if (err.isBoom) {
                 return err;
             } else {
