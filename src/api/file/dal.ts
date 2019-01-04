@@ -1,7 +1,8 @@
 import { Request, Readable } from '../../types';
 import { Response } from '../../types';
 import FileController from './controller';
-import { ApiReqHandler } from '../apiDAL';
+import { ApiReqHandler } from '../apiDal';
+import { handleErrorToBoom } from '../../utils/error';
 
 export default class FileReqHandler extends ApiReqHandler<FileController> {
 
@@ -12,6 +13,7 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
             await this.controller.handleFileUpload(filename, data);
             return h.response({message: 'file uploaded succcesfully'}).code(201);
         } catch (err) {
+            handleErrorToBoom(err.message);
             if (err.isBoom) {
                 return err;
             } else {

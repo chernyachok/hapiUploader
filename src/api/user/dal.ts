@@ -1,4 +1,4 @@
-import { ApiReqHandler } from "../apiDAL";
+import { ApiReqHandler } from "../apiDal";
 import { Request } from '../../types';
 import { Response } from '../../types';
 import { ClientError } from "../../constants";
@@ -12,7 +12,7 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
            const user = await this.controller.getMe(token);
            
            if (!user) {
-            return h.badRequest(ClientError.userNotExists);
+            return h.notFound(ClientError.userNotExists);
            }
 
            return h.response(user);

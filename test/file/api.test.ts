@@ -195,11 +195,11 @@ describe('Files API', () => {
         expect(response.request.payload).to.include(file.fileToBeUpd);
     });
 
-    it('PUT /files - Should update non-existing file and return 400', async () => {
+    it('PUT /files - Should update non-existing file and return 404', async () => {
         const response = await updateFile({...file.fileToBeUpd, id: 666});
         const parsedPayload = JSON.parse(response.payload);
 
-        expect(parsedPayload.statusCode).to.equal(400);
+        expect(parsedPayload.statusCode).to.equal(404);
         expect(parsedPayload.message).to.equal(ClientError.fileNotExists);
     });
 
@@ -211,7 +211,7 @@ describe('Files API', () => {
         expect(parsedPayload).to.have.property("message");
     });
 
-    it('DELETE /files - Should delete non-existing file and return 400', async () => {
+    it('DELETE /files - Should delete non-existing file and return 404', async () => {
         const response = await deleteFile({id: file.badId});
         const parsedPayload = JSON.parse(response.payload);
         expect(parsedPayload.statusCode).to.equal(400);

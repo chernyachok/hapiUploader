@@ -3,7 +3,6 @@ import { Server, PluginConstructor } from '../types';
 import { ServerConfigurations } from "../configurations";
 import { Models } from '../db/types';
 
-
 export async function init(serverConfigs: ServerConfigurations, modelList: Models): Promise<Server> {
     const { port, host } = serverConfigs;
     const server = new Hapi.Server({

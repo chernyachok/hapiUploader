@@ -1,4 +1,4 @@
-import FileDal from './DAL';
+import FileDal from './dal';
 import initRoutes from './routes';
 import { Server } from '../../types';
 import { ApiEnterOptions } from '../../types';
@@ -11,7 +11,7 @@ export default async function init(
         modelList: { fileModel }
     }: ApiEnterOptions
 ): Promise<boolean> {
-    const fileController = new FileController(fileModel, serverConfigs, server.boom());
+    const fileController = new FileController(fileModel, serverConfigs);
     const fileDal = new FileDal(fileController);
     server.bind(fileDal);
     await initRoutes(server, serverConfigs, fileDal);

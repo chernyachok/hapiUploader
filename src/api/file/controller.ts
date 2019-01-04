@@ -5,7 +5,6 @@ import { FileModel } from '../../db/types';
 import { ServerConfigurations } from '../../configurations';
 import { createUrl } from '../../utils/file';
 import { ApiController } from '../apiController';
-import { IBoomMethods } from '../../types';
 
 export default class FileController extends ApiController<FileModel> {
 
@@ -14,9 +13,8 @@ export default class FileController extends ApiController<FileModel> {
     constructor(
         fileModel: FileModel,
         configs: ServerConfigurations,
-        boom: IBoomMethods
     ) {
-        super(fileModel, configs, boom);
+        super(fileModel, configs);
         this._fileSystem = new FileSystem(this._configs.uploadDir);
     }
 
@@ -25,7 +23,7 @@ export default class FileController extends ApiController<FileModel> {
             const isExist = this._fileSystem.isExist(filename);
             
             if (isExist) {
-                throw this._boom.badRequest(ClientError.fileAlreadyExists);
+                throw new Error(ClientError.fileAlreadyExists);
             }
             
             await this._fileSystem.writeFile(filename, data);
@@ -51,7 +49,7 @@ export default class FileController extends ApiController<FileModel> {
 
             const response = await this.model.findOne({where: { id }});
             if (response === null) {
-                throw this._boom.badRequest(ClientError.fileNotExists);
+                throw new Error(ClientError.fileNotExists);
             }
             await this._fileSystem.renameFile(response.dataValues.filename, newFilename);
             const newUrl = createUrl(`/files/${newFilename}`);
@@ -63,7 +61,7 @@ export default class FileController extends ApiController<FileModel> {
 
             const response = await this.model.findOne({where: {id}});
             if (response === null) {
-                throw this._boom.badRequest(ClientError.fileNotExists);
+                throw new Error(ClientError.fileNotExists);
             }
             await this._fileSystem.removeFile(response.dataValues.filename);
             await this.model.destroy({where: { id }});
