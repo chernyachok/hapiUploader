@@ -15,6 +15,7 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
   },
   "include": [
     "src/**/**.ts"

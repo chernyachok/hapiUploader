@@ -28,5 +28,4 @@ export const clearDirectory = async (url: string) => {
     files.forEach(async (filename: string) => {
         fs.unlink(url + `/${filename}`);
     });
-    console.log('finished');
 };
