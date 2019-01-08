@@ -13,7 +13,7 @@
     "watch-json": "npm run copy-configs -w",
     "copy-configs": "cpx \"src/configurations/*.json\" build/configurations",
     "launch": "node build/app.js",
-    "build-launch": "npm run build & npm run launch",
+    "build-launch": "npm run build && npm run launch",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "test": "mocha -r ts-node/register test/launch.ts"
   },

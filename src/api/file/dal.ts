@@ -4,9 +4,8 @@ import FileController from './controller';
 import { ApiReqHandler } from '../apiDal';
 
 export default class FileReqHandler extends ApiReqHandler<FileController> {
-
+    
     private async handleFileUpload (file: Readable, h: Response) {
-
             const { filename } = file.hapi;
             const data = file._data;
             await this.controller.handleFileUpload(filename, data);
@@ -40,7 +39,7 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
     }
 
     public async updateFile(req: Request, h: Response) {
-        
+
             const {id, newFilename} = req.payload;
             await this.controller.updateFile(id , newFilename);
             return h.response({message: 'updated successfully'}).code(200);
