@@ -21,6 +21,7 @@ export default class UserReqHandler extends ApiReqHandler<UserController> {
     public async createUser(req: Request, h: Response) {
 
             const { username, password } = req.payload;
+            
             const token = await this.controller.createUser(username, password);
             return h.response({ message: 'token registered successfully', auth: true, token}).code(201);
     }
