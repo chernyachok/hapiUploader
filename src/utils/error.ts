@@ -1,4 +1,9 @@
+import Boom from 'boom';
 import { boomDictionary } from "./boom";
 
-export const handleErrorToBoom = (message: string) =>
-    boomDictionary[message]();
+export function handleErrorToBoom(msgOrBoom: string | Boom): Boom {
+    if (typeof msgOrBoom !== 'string') {
+        return msgOrBoom;
+    }
+    return boomDictionary[msgOrBoom]();
+}
