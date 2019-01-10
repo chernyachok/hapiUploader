@@ -1,9 +1,11 @@
 import { handleErrorToBoom } from "./error";
 import { Request, Response } from '../types';
+import FileReqHandler from "../api/file/dal";
+import UserReqHandler from "../api/user/dal";
 
-export function dalErrorHandler(isDecorated: boolean) {
-    if (isDecorated) {
-        return function (target: any) {
+type Reference = typeof FileReqHandler | typeof UserReqHandler;
+
+export function dalErrorHandler(target: Reference) {
             const proto = target.prototype;
             for (let key of Object.getOwnPropertyNames(proto)) { 
                 
@@ -11,10 +13,12 @@ export function dalErrorHandler(isDecorated: boolean) {
                     proto[key] = decoreWithErrorHandler(proto[key]);
                 }
             }
-        }; 
-    }  else {
-        return;
-    } 
+}
+
+export function methodDalErrorHandler(target: any, prop: string, descriptor: PropertyDescriptor) {
+            descriptor.value = decoreWithErrorHandler(descriptor.value);
+        
+            return descriptor;
 }
 
 function decoreWithErrorHandler(method: (req: Request, h: Response) => any) {
@@ -34,3 +38,4 @@ function decoreWithErrorHandler(method: (req: Request, h: Response) => any) {
         }
     };
 }
+

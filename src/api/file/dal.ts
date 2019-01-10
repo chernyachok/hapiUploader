@@ -3,7 +3,7 @@ import FileController from './controller';
 import { ApiReqHandler } from '../apiDal';
 import { dalErrorHandler } from '../../utils/decorators';
 
-@dalErrorHandler(true)
+@dalErrorHandler
 export default class FileReqHandler extends ApiReqHandler<FileController> {
     
     private async handleFileUpload (file: Readable, h: Response) {
@@ -38,14 +38,14 @@ export default class FileReqHandler extends ApiReqHandler<FileController> {
         const { file } = req.payload;
         return this.handleFileUpload(file, h);
     }
-
+    
     public async updateFile(req: Request, h: Response) {
 
             const {id, newFilename} = req.payload;
             await this.controller.updateFile(id , newFilename);
             return h.response({message: 'updated successfully'}).code(200);
     }
-
+    
     public async deleteFile(req: Request, h: Response) {
             const { id } = req.payload;
             await this.controller.deleteFile(id);

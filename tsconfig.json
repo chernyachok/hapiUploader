@@ -7,7 +7,7 @@
     "sourceMap": true,
     "typeRoots": ["node_modules/@types"],
     "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": false,
+    "noImplicitReturns": true,
     "noImplicitThis": false,
     "noImplicitAny": true,
     "strictNullChecks": false,
