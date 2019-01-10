@@ -1,8 +1,9 @@
-import { Request, Readable } from '../../types';
-import { Response } from '../../types';
+import { Request, Response, Readable } from '../../types';
 import FileController from './controller';
 import { ApiReqHandler } from '../apiDal';
+import { dalErrorHandler } from '../../utils/decorators';
 
+@dalErrorHandler(true)
 export default class FileReqHandler extends ApiReqHandler<FileController> {
     
     private async handleFileUpload (file: Readable, h: Response) {

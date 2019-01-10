@@ -1,9 +1,10 @@
 import { ApiReqHandler } from "../apiDal";
-import { Request } from '../../types';
-import { Response } from '../../types';
+import { Request, Response } from '../../types';
 import { ClientError } from "../../constants";
 import UserController from "./controller";
+import { dalErrorHandler } from "../../utils/decorators";
 
+@dalErrorHandler(true)
 export default class UserReqHandler extends ApiReqHandler<UserController> {
 
     public async getMe (req: Request, h: Response) {
