@@ -2,7 +2,7 @@ import Boom from 'boom';
 import { Server } from '../types';
 import { PluginObject, Plugin } from '../types';
 
-const methods: string[] = [
+export const methods: string[] = [
     "badImplementation", // 500
     "notFound", // 404
     "badData", // 422
@@ -24,14 +24,6 @@ export default class BoomPlugin implements Plugin {
                     const boomHandler = (message: string) => Boom[method](message);
                     server.decorate('toolkit', method, boomHandler);
                 });
-                
-                const boom = methods.reduce((acc, method) => {
-                    acc[method] = (message: string) => Boom[method](message);
-
-                    return acc;
-                }, {});
-                const serverBoomMethods = () => boom;
-                server.decorate('server', 'boom', serverBoomMethods);
             }
         };
     }

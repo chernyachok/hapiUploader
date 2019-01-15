@@ -22,3 +22,10 @@ export const appendFiles = (formData: FormData, fileNames: string[], fieldName: 
     
       return formData;
 };
+
+export const clearDirectory = async (url: string) => {
+    const files = fs.readdirSync(url);
+    files.forEach(async (filename: string) => {
+        fs.unlink(url + `/${filename}`);
+    });
+};
