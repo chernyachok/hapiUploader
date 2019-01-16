@@ -17,6 +17,6 @@ if (fs.existsSync(path.join(process.cwd(), '.env'))) {
 import { getServerConfigs } from './configurations';
 
 const serverConfigs = getServerConfigs();
-import start from './server';
+import start from './server/startServer';
 
 start(serverConfigs);

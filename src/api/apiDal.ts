@@ -1,3 +1,5 @@
+import { RESOLVER } from "awilix";
+
 export abstract class ApiReqHandler<ControllerType> {
     constructor(private _controller: ControllerType) {}
 
@@ -5,3 +7,5 @@ export abstract class ApiReqHandler<ControllerType> {
         return this._controller;
     }
 }
+
+ApiReqHandler[RESOLVER] = {};

@@ -2,8 +2,9 @@ import * as Hapi from 'hapi';
 import { Server, PluginConstructor } from '../types';
 import { ServerConfigurations } from "../configurations";
 import { Models } from '../db/types';
+import { RESOLVER } from 'awilix';
 
-export async function init(serverConfigs: ServerConfigurations, modelList: Models): Promise<Server> {
+export async function initServer(serverConfigs: ServerConfigurations, modelList: Models): Promise<Server> {
     const { port, host } = serverConfigs;
     const server = new Hapi.Server({
         port,
@@ -34,3 +35,5 @@ export async function init(serverConfigs: ServerConfigurations, modelList: Model
 
     return server;
 }
+
+initServer[RESOLVER] = {};

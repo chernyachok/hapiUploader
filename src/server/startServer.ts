@@ -1,9 +1,9 @@
-import { init as initServer } from './initServer';
+import { initServer } from './initServer';
 import { ServerConfigurations } from '../configurations';
-import { init as initDb} from '../db/init';
+import { initDb } from '../db/init';
 import { initModels } from '../db';
 
-export default async function start(serverConfigs: ServerConfigurations): Promise<void> {
+export default async function startServer(serverConfigs: ServerConfigurations): Promise<void> {
     try {
         const dbConn = await initDb(serverConfigs);
         const modelList = await initModels(dbConn);

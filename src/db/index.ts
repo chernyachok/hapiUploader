@@ -2,6 +2,7 @@ import { Sequelize, Model } from 'sequelize';
 import { readdirSync } from 'fs';
 import path from 'path';
 import { Models } from './types';
+import { RESOLVER } from 'awilix';
 
 type ModelObj = [string, Model<any, any>];
 
@@ -29,3 +30,5 @@ export const initModels = async (dbConn: Sequelize): Promise<Models> => {
     const resolvedModels = await Promise.all(modelPromises);
     return convertArrToObj(resolvedModels);
 };
+
+initModels[RESOLVER] = {};
