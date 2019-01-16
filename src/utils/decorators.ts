@@ -1,7 +1,7 @@
 import { handleErrorToBoom } from "./error";
 import { Request, Response } from '../types';
-import FileReqHandler from "../api/file/dal";
-import UserReqHandler from "../api/user/dal";
+import FileReqHandler from "../api/file/fileDal";
+import UserReqHandler from "../api/user/userDal";
 
 type Reference = typeof FileReqHandler | typeof UserReqHandler;
 

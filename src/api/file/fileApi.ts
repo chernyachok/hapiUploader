@@ -1,8 +1,8 @@
-import FileDal from './dal';
-import initRoutes from './routes';
+import FileDal from './fileDal';
+import initRoutes from './fileRoutes';
 import { Server } from '../../types';
 import { ApiEnterOptions } from '../../types';
-import FileController from './controller';
+import FileController from './fileController';
 
 export default async function init(
     server: Server,

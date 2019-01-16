@@ -1,5 +1,5 @@
 import FileSystem from './fileSystem';
-import { getApi, getHtmlString } from './utils';
+import { getApi, getHtmlString } from './fileUtils';
 import { ClientError } from '../../constants';
 import { FileModel } from '../../db/types';
 import { ServerConfigurations } from '../../configurations';

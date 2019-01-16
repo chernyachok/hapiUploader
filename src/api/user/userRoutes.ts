@@ -2,11 +2,11 @@ import { Server } from "../../types";
 import { ServerConfigurations } from "../../configurations";
 import {
     createUserValidator
-} from './validator';
+} from './userValidator';
 import { jwtValidator, idParamValidator } from "../../utils/validation";
-import UserReqHandler from "./dal";
+import UserReqHandler from "./userDal";
 
-export default async function(server: Server, configs: ServerConfigurations, userController: UserReqHandler) {
+export default async function init(server: Server, configs: ServerConfigurations, userController: UserReqHandler) {
 
     server.route({
         method: 'GET',

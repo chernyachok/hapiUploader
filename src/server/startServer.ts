@@ -1,4 +1,4 @@
-import { initServer } from './initServer';
+import { initServer } from './configureServer';
 import { ServerConfigurations } from '../configurations';
 import { initDb } from '../db/init';
 import { initModels } from '../db';

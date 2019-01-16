@@ -1,11 +1,11 @@
 import { ApiReqHandler } from "../apiDal";
 import { Request, Response } from '../../types';
 import { ClientError } from "../../constants";
-import UserController from "./controller";
+import UserController from "./userController";
 import { dalErrorHandler } from "../../utils/decorators";
 
 @dalErrorHandler
-export default class UserReqHandler extends ApiReqHandler<UserController> {
+export default class UserDal extends ApiReqHandler<UserController> {
     public async getMe (req: Request, h: Response) {
         
            const token = req.headers['authorization'];

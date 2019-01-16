@@ -1,7 +1,7 @@
-import initRoutes from './routes';
+import initRoutes from './userRoutes';
 import { Server } from '../../types/server';
-import UserController from './controller';
-import UserDal from './dal';
+import UserController from './userController';
+import UserDal from './userDal';
 import { ApiEnterOptions } from '../../types/common';
 
 export default async function init(

@@ -1,5 +1,5 @@
 import { UserModel } from "../../db/types";
-import { generateToken, decodeToken } from './utils';
+import { generateToken, decodeToken } from './userUtils';
 import { ApiController } from "../apiController";
 
 export default class UserController extends ApiController<UserModel> {

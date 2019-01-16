@@ -4,16 +4,16 @@ import {
     jobModel,
     deleteValidator,
     updateValidator,
-} from './validator';
+} from './fileValidator';
 import { jwtValidator } from '../../utils/validation';
 import { handleFileValidation, getImageAllowedFormats, getDocsAllowedFormats } from '../../utils/file';
 import { Server } from '../../types/server';
 import { Request } from '../../types/request';
 import { Response } from '../../types/response';
 import { ServerConfigurations } from '../../configurations';
-import FileReqHandler from './dal';
+import FileReqHandler from './fileDal';
 
-export default async function(server: Server, configs: ServerConfigurations, fileController: FileReqHandler) {
+export default async function init(server: Server, configs: ServerConfigurations, fileController: FileReqHandler) {
 
     server.route({
         method: 'GET',

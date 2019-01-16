@@ -4,38 +4,37 @@ import {
     asFunction,
 }
 from 'awilix';
-import * as glob from 'fast-glob';
-
-type MatchedFiles = Array<[string, {[key: string]: any}]>;
-
-const matchedFiles = (folders: string[]): MatchedFiles => {
-    let files =  glob.sync<string>(folders, {
-        cwd: __dirname,
-
-    });
-
-    return files.reduce((acc, fileName) => {
-        if (fileName.toLowerCase().includes('controller') || fileName.toLowerCase().includes('reqhandler')) {
-            acc.push([fileName, {
-                register: asClass,
-                lifetime: 'SINGLETON'
-            }]);
-            return acc;
-        } else {
-            acc.push([fileName, {
-                register: asFunction,
-                lifetime: 'SINGLETON'
-            }]);
-            return acc;
-        }
-    }, []);
-};
 
 const configureContainer = () => {
     const initContainer = createContainer({
         injectionMode: 'CLASSIC'
     });
-    initContainer.loadModules(matchedFiles(['db/**/*.js', 'plugins/**/*.js', 'server/**/*.js', 'api/**/*.js']), {
+    initContainer.loadModules([
+        ['db/**/*.js', {
+            lifetime: 'SINGLETON',
+            register: asFunction
+        }],
+        ['plugins/**/*.js', {
+            lifetime: 'SINGLETON',
+            register: asClass
+        }],
+        ['server/**/*.js', {
+            lifetime: 'SINGLETON',
+            register: asFunction
+        }],
+        ['api/**/*.js', {
+            lifetime: 'SINGLETON',
+            register: asClass
+        }],
+        ['api/**/!(controller|dal|apiController|apiDal|fileSystem).js', {
+            lifetime: 'SINGLETON',
+            register: asFunction
+        }],
+        ['configurations/**/*.js', {
+            lifetime: 'SINGLETON',
+            register: asFunction
+        }]
+    ], {
         cwd: __dirname,
         formatName: 'camelCase'
     });

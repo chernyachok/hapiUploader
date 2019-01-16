@@ -1,5 +1,6 @@
 import nconf from 'nconf';
 import * as path from 'path';
+import { RESOLVER } from 'awilix';
 
 const envMode = process.env.NODE_ENV;
 
@@ -35,3 +36,5 @@ export function getServerConfigs(): ServerConfigurations {
         }
     );
 }
+
+getServerConfigs[RESOLVER] = {};
