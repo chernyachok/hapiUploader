@@ -2,45 +2,48 @@ import {
     createContainer,
     asClass,
     asFunction,
+    asValue,
 }
 from 'awilix';
+import { getServerConfigs, ServerConfigurations } from './configurations';
+import { initDb } from './db/init';
+import { initModels } from './db';
 
-const configureContainer = () => {
+export const configureContainer = async () => {
     const initContainer = createContainer({
         injectionMode: 'CLASSIC'
     });
     initContainer.loadModules([
         ['db/**/*.js', {
-            lifetime: 'SINGLETON',
             register: asFunction
         }],
         ['plugins/**/*.js', {
-            lifetime: 'SINGLETON',
             register: asClass
         }],
         ['server/**/*.js', {
-            lifetime: 'SINGLETON',
             register: asFunction
         }],
-        ['api/**/*.js', {
-            lifetime: 'SINGLETON',
+        ['api/**/+(controller|dal|apiController|apiDal|fileSystem).js', {
             register: asClass
         }],
         ['api/**/!(controller|dal|apiController|apiDal|fileSystem).js', {
-            lifetime: 'SINGLETON',
-            register: asFunction
-        }],
-        ['configurations/**/*.js', {
-            lifetime: 'SINGLETON',
             register: asFunction
         }]
     ], {
         cwd: __dirname,
-        formatName: 'camelCase'
+        formatName: 'camelCase',
+        resolverOptions: {
+            lifetime: 'SINGLETON'
+        }
+    }).register({
+        serverConfigs: asFunction(getServerConfigs).singleton()
+    });
+    const dbConn = await initDb(initContainer.resolve<ServerConfigurations>('serverConfigs'));
+    const modelList = await initModels(dbConn);
+
+    initContainer.register({
+        modelList: asValue(modelList)
     });
 
     return initContainer;
 };
-
-const container = configureContainer();
-console.log(Object.getOwnPropertyNames(container.cradle));

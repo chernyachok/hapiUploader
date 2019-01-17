@@ -1,11 +1,10 @@
 import * as Hapi from 'hapi';
-import { Server, PluginConstructor } from '../types';
+import { Server } from '../types';
 import { ServerConfigurations } from "../configurations";
-import { Models } from '../db/types';
-import { RESOLVER } from 'awilix';
+import { RESOLVER, AwilixContainer, asValue } from 'awilix';
 
-export async function initServer(serverConfigs: ServerConfigurations, modelList: Models): Promise<Server> {
-    const { port, host } = serverConfigs;
+export async function initServer(container: AwilixContainer) {
+    const { port, host, plugins, api } = container.resolve<ServerConfigurations>('serverConfigs');
     const server = new Hapi.Server({
         port,
         host,
@@ -16,24 +15,19 @@ export async function initServer(serverConfigs: ServerConfigurations, modelList:
         }
     }) as Server;
 
-    const { plugins, api } = serverConfigs;
-
-    const pluginPromises: Array<Promise<void>> = plugins.map((pluginName: string) => {
-        const Plugin: PluginConstructor = require('../plugins/' + pluginName).default;
-        const plugin = new Plugin();
-        return plugin.register(server, { serverConfigs, modelList });
+    await container.register({
+        server: asValue(server)
     });
+
+    const pluginPromises: Array<Promise<void>> = plugins.map(async (pluginName: string) => 
+         container.resolve<any>(pluginName).register());
 
     await Promise.all(pluginPromises);
     
-    const apiPromises: Array<Promise<void>> = api.map((apiName: string) => {
-        const initApi = require('../api/' + apiName).default;
-        return initApi(server, { serverConfigs, modelList });
-    });
+    const apiPromises: Array<Promise<void>> = api.map(async (apiName: string) => 
+        container.resolve<any>(apiName));
 
     await Promise.all(apiPromises);
-
-    return server;
 }
 
 initServer[RESOLVER] = {};

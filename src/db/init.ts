@@ -1,9 +1,10 @@
 import Sequelize from 'sequelize';
+import { RESOLVER, AwilixContainer, asValue } from 'awilix';
 import { ServerConfigurations } from '../configurations';
-import { RESOLVER } from 'awilix';
 
-export async function initDb(serverConfigs: ServerConfigurations): Promise<Sequelize.Sequelize> {
-        const dbConnection = new Sequelize(serverConfigs.dbUri, {
+export async function initDb(container: AwilixContainer) {
+        const { dbUri } = container.resolve<ServerConfigurations>('serverconfigs');
+        const dbConnection = new Sequelize(dbUri, {
             define: {
                 freezeTableName: true,
                 timestamps: false
@@ -11,7 +12,9 @@ export async function initDb(serverConfigs: ServerConfigurations): Promise<Seque
             logging: false
         });
         await dbConnection.authenticate();
-        return dbConnection;
+        container.register({
+            dbConn: asValue(dbConnection)
+        });
 }
 
 initDb[RESOLVER] = {};

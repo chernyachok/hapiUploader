@@ -1,13 +1,13 @@
 {
     "server": {
         "plugins": [
-            "boom",
-            "inert",
-            "jwt-auth"
+            "boomPlugin",
+            "inertPlugin",
+            "jwtAuthPlugin"
         ],
         "api": [
-            "file",
-            "user"
+            "fileApi",
+            "userApi"
         ],
         "fileMaxSize": 540128,
         "fileWhiteList": [

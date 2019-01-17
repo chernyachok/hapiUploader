@@ -1,9 +1,9 @@
 import { Server } from "./server";
 import { ServerConfigurations } from "../configurations";
-import { Models } from "../db/types";
+import { Models, UserModel } from "../db/types";
 
 export interface PluginOptions {
-    modelList: Models;
+    model: Models;
     serverConfigs: ServerConfigurations;
 }
 
@@ -14,7 +14,7 @@ export interface PluginObject {
 }
 
 export interface Plugin {
-    register(server: Server, options?: PluginOptions): Promise<void>;
+    register(server: Server, serverConfigs?: ServerConfigurations, userModel?: UserModel ): Promise<void>;
     info(): PluginInfo;
 }
 

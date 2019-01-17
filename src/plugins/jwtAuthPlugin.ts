@@ -2,7 +2,8 @@ import * as HapiJwt from 'hapi-auth-jwt2';
 import { Server } from '../types';
 import { ServerConfigurations } from "../configurations";
 import { ClientError } from '../constants';
-import { Plugin, PluginOptions } from '../types';
+import { Plugin } from '../types';
+import { UserModel } from '../db/types';
 
 type ValidateUser = (decoded: any) => Promise<{isValid: boolean}>;
 
@@ -25,7 +26,7 @@ export default class JwtPlugin implements Plugin {
         server.auth.default("jwt");
     }
     
-    public async register(server: Server, { serverConfigs, modelList: { userModel } }: PluginOptions): Promise<void> {
+    public async register(server: Server, serverConfigs: ServerConfigurations, userModel: UserModel ) {
         try {
             await server.register(HapiJwt);
            

@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as dotenv from 'dotenv'; 
 import * as fs from 'fs';
+import { container } from './diContainer';
 
 if (fs.existsSync(path.join(process.cwd(), '.env'))) {
     const result = dotenv.config();
@@ -14,9 +15,4 @@ if (fs.existsSync(path.join(process.cwd(), '.env'))) {
     process.exit(1);
 }
 
-import { getServerConfigs } from './configurations';
-
-const serverConfigs = getServerConfigs();
-import start from './server/startServer';
-
-start(serverConfigs);
+container.cradle.startServer;
