@@ -11,7 +11,6 @@ export default async function startServer(container: AwilixContainer) {
         const server = await initServer(container);
         
         await server.start();
-        console.log(container.cradle);
         console.log(`server start at ${server.info.uri}`);
         console.log('Connection to the database has been established successfully.');
     } catch (err) {

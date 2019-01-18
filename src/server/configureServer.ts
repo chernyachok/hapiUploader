@@ -21,10 +21,9 @@ export async function initServer(container: AwilixContainer) {
     container.register({
         server: asValue(server)
     });
-    console.log('SERFGVE', Object.getOwnPropertyNames(container.cradle));
-
+    
     const pluginPromises: Array<Promise<void>> = getFolderFileNames(path.join(__dirname, '..', 'plugins')).map(async (pluginName: string) => 
-        container.resolve<any>(pluginName).register());
+        container.resolve<any>(pluginName).register()); // <--- .register(server)
 
     await Promise.all(pluginPromises);
     

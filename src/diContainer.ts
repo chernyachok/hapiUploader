@@ -35,6 +35,6 @@ export const configureContainer = async () => {
     }).register({
         serverConfigs: asFunction(getServerConfigs).singleton()
     });
-    // console.log(Object.getOwnPropertyNames(initContainer.cradle));
+
     return initContainer;
 };

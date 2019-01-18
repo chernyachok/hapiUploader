@@ -1,5 +1,3 @@
-import { RESOLVER } from "awilix";
-
 export abstract class ApiDal<ControllerType> {
     constructor(private _controller: ControllerType) {}
 
@@ -7,5 +5,3 @@ export abstract class ApiDal<ControllerType> {
         return this._controller;
     }
 }
-
-ApiDal[RESOLVER] = {};

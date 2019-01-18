@@ -1,5 +1,4 @@
 import { ServerConfigurations } from "../configurations";
-import { RESOLVER } from "awilix";
 
 export abstract class ApiController<ModelType> {
     constructor(
@@ -11,5 +10,3 @@ export abstract class ApiController<ModelType> {
         return this._model;
     }
 }
-
-ApiController[RESOLVER] = {};

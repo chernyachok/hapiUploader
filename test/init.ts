@@ -2,8 +2,8 @@ import * as path from 'path';
 import dotenv from 'dotenv';
 dotenv.config({path: path.join(process.cwd(), '.env.test')});
 
-import { init as initServer } from '../src/server/initServer';
-import { init as initDb } from '../src/db/init';
+import { initServer } from '../src/server/configureServer';
+import { initDb } from '../src/db/init';
 import { initModels } from '../src/db';
 import { getServerConfigs, ServerConfigurations } from '../src/configurations';
 import { Server } from '../src/types/server';

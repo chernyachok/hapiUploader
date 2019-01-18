@@ -1,11 +1,5 @@
 import { Server } from "./server";
 import { ServerConfigurations } from "../configurations";
-import { Models, UserModel } from "../db/types";
-
-export interface PluginOptions {
-    model: Models;
-    serverConfigs: ServerConfigurations;
-}
 
 export interface PluginObject {
     name: string;
@@ -14,15 +8,11 @@ export interface PluginObject {
 }
 
 export interface Plugin {
-    register(server: Server, serverConfigs?: ServerConfigurations, userModel?: UserModel ): Promise<void>;
+    register(): Promise<void>;
     info(): PluginInfo;
 }
 
 export interface PluginInfo {
     name: string;
     version: string;
-}
-
-export interface PluginConstructor {
-    new(): Plugin;
 }

@@ -25,5 +25,3 @@ export interface FileAttributes {
     filename: string;
     url: string;
 }
-
-export type Models = UserModel | FileModel;

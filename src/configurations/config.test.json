@@ -1,13 +1,8 @@
 {
     "server": {
-        "plugins": [
-            "boom",
-            "inert",
-            "jwt-auth"
-        ],
-        "api": [
-            "file",
-            "user"
+        "routes": [
+            "fileRoutes",
+            "userRoutes"
         ],
         "fileMaxSize": 540128,
         "fileWhiteList": [
