@@ -1,8 +1,16 @@
 import { UserModel } from "../../db/types";
 import { generateToken, decodeToken } from './userUtils';
 import { ApiController } from "../apiController";
+import { ServerConfigurations } from "../../configurations";
 
 export default class UserController extends ApiController<UserModel> {
+
+    constructor(
+        userModel: UserModel,
+        serverConfigs: ServerConfigurations
+    ) {
+        super(userModel, serverConfigs);
+    }
 
     public async getMe (token: string) {
             const decodedToken = decodeToken(token, this._configs.jwtSecret);

@@ -1,19 +1,18 @@
 import { Server } from "../../types";
-import { ServerConfigurations } from "../../configurations";
 import {
     createUserValidator
 } from './userValidator';
 import { jwtValidator, idParamValidator } from "../../utils/validation";
-import UserReqHandler from "./userDal";
+import UserDal from "./userDal";
 
-export default async function init(server: Server, configs: ServerConfigurations, userController: UserReqHandler) {
+export default async function init(server: Server, userDal: UserDal) {
 
     server.route({
         method: 'GET',
         path: '/users/me',
         options: {
             auth: false,
-            handler: userController.getMe,
+            handler: userDal.getMe,
             validate: {
                 headers: jwtValidator
             },
@@ -26,7 +25,7 @@ export default async function init(server: Server, configs: ServerConfigurations
         path: '/users',
         options: {
             auth: false,
-            handler: userController.createUser,
+            handler: userDal.createUser,
             validate: {
                 payload: createUserValidator
             },
@@ -39,7 +38,7 @@ export default async function init(server: Server, configs: ServerConfigurations
         path: '/users/{id}',
         options: {
             auth: 'jwt',
-            handler: userController.getUser,
+            handler: userDal.getUser,
             validate: {
                 params: idParamValidator
             },
@@ -52,7 +51,7 @@ export default async function init(server: Server, configs: ServerConfigurations
         path: '/users',
         options: {
             auth: 'jwt',
-            handler: userController.getUsers,
+            handler: userDal.getUsers,
             validate: {
                 headers: jwtValidator
             },

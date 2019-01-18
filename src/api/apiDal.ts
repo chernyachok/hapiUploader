@@ -1,6 +1,6 @@
 import { RESOLVER } from "awilix";
 
-export abstract class ApiReqHandler<ControllerType> {
+export abstract class ApiDal<ControllerType> {
     constructor(private _controller: ControllerType) {}
 
     public get controller() {
@@ -8,4 +8,4 @@ export abstract class ApiReqHandler<ControllerType> {
     }
 }
 
-ApiReqHandler[RESOLVER] = {};
+ApiDal[RESOLVER] = {};

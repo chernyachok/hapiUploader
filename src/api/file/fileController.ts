@@ -12,9 +12,9 @@ export default class FileController extends ApiController<FileModel> {
 
     constructor(
         fileModel: FileModel,
-        configs: ServerConfigurations,
+        serverConfigs: ServerConfigurations,
     ) {
-        super(fileModel, configs);
+        super(fileModel, serverConfigs);
         this._fileSystem = new FileSystem(this._configs.uploadDir);
     }
 

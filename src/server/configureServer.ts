@@ -1,10 +1,13 @@
 import * as Hapi from 'hapi';
+import * as path from 'path';
 import { Server } from '../types';
 import { ServerConfigurations } from "../configurations";
 import { RESOLVER, AwilixContainer, asValue } from 'awilix';
+import { getFolderFileNames } from '../db';
 
 export async function initServer(container: AwilixContainer) {
-    const { port, host, plugins, api } = container.resolve<ServerConfigurations>('serverConfigs');
+    const { port, host, routes } = container.resolve<ServerConfigurations>('serverConfigs');
+    
     const server = new Hapi.Server({
         port,
         host,
@@ -15,19 +18,22 @@ export async function initServer(container: AwilixContainer) {
         }
     }) as Server;
 
-    await container.register({
+    container.register({
         server: asValue(server)
     });
+    console.log('SERFGVE', Object.getOwnPropertyNames(container.cradle));
 
-    const pluginPromises: Array<Promise<void>> = plugins.map(async (pluginName: string) => 
-         container.resolve<any>(pluginName).register());
+    const pluginPromises: Array<Promise<void>> = getFolderFileNames(path.join(__dirname, '..', 'plugins')).map(async (pluginName: string) => 
+        container.resolve<any>(pluginName).register());
 
     await Promise.all(pluginPromises);
     
-    const apiPromises: Array<Promise<void>> = api.map(async (apiName: string) => 
-        container.resolve<any>(apiName));
+    const routePromises: Array<Promise<void>> = routes.map(async (domainRouteName: string) => 
+        container.resolve<any>(domainRouteName));
 
-    await Promise.all(apiPromises);
+    await Promise.all(routePromises);
+
+    return server;
 }
 
 initServer[RESOLVER] = {};

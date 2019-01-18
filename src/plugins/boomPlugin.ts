@@ -15,6 +15,8 @@ export default class BoomPlugin implements Plugin {
     private _name: string;
     private _version: string;
 
+    constructor(private server: Server) {} // <--- direct from container 
+
     private createBoomPlugin(): PluginObject {
         return {
             name: "Boom",
@@ -28,12 +30,13 @@ export default class BoomPlugin implements Plugin {
         };
     }
 
-    public async register(server: Server): Promise<void> {
+    public async register(): Promise<void> { // <--- Can receive params from container.resolve().register(->param<-) 
         try {
+          
           const plugin  = this.createBoomPlugin(); 
           this._name = plugin.name;
           this._version = plugin.version;
-          return server.register(plugin);
+          return this.server.register(plugin);
         } catch (err) {
           console.log(`Error registering boom plugin: ${err}`);
           throw err;

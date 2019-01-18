@@ -3,9 +3,11 @@ import { Plugin } from "../types";
 
 export default class InertPlugin implements Plugin {
 
-  async register(server: Server): Promise<void> {
+  constructor(private server: Server) {}
+
+  async register(): Promise<void> {
     try {
-      return server.register(require("inert"));
+      return this.server.register(require("inert"));
     } catch (err) {
       console.log(`Error registering inert plugin: ${err}`);
     }

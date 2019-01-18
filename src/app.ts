@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as dotenv from 'dotenv'; 
 import * as fs from 'fs';
-import { container } from './diContainer';
+import startServer from './server/startServer';
 
 if (fs.existsSync(path.join(process.cwd(), '.env'))) {
     const result = dotenv.config();
@@ -15,4 +15,7 @@ if (fs.existsSync(path.join(process.cwd(), '.env'))) {
     process.exit(1);
 }
 
-container.cradle.startServer;
+(async() => {
+    let container = await require('./diContainer').configureContainer();
+    startServer(container);
+})();

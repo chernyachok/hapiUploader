@@ -8,10 +8,16 @@ import { UserModel } from '../db/types';
 type ValidateUser = (decoded: any) => Promise<{isValid: boolean}>;
 
 export default class JwtPlugin implements Plugin {
+
+    constructor(
+        private server: Server,
+        private serverConfigs: ServerConfigurations,
+        private userModel: UserModel
+    ) {}
     
-    private async setAuthStrategy(server: Server, configs: ServerConfigurations, validate: ValidateUser) {
-        server.auth.strategy('jwt', 'jwt',
-        { key: configs.jwtSecret,          
+    private async setAuthStrategy(validate: ValidateUser) {
+        this.server.auth.strategy('jwt', 'jwt',
+        { key: this.serverConfigs.jwtSecret,          
             validate,           
             verifyOptions: { algorithms: [ 'HS256' ] },
             errorFunc: (errorContext: HapiJwt.ErrorContext) => {
@@ -23,18 +29,18 @@ export default class JwtPlugin implements Plugin {
             }
         });
     
-        server.auth.default("jwt");
+        this.server.auth.default("jwt");
     }
     
-    public async register(server: Server, serverConfigs: ServerConfigurations, userModel: UserModel ) {
+    public async register() {
         try {
-            await server.register(HapiJwt);
+            await this.server.register(HapiJwt);
            
             const validate: ValidateUser = async decoded => {
-                const response = await userModel.findOne({ where: { id: decoded.id }});
+                const response = await this.userModel.findOne({ where: { id: decoded.id }});
                 return { isValid: !response ? false : true};
             };
-            return this.setAuthStrategy(server, serverConfigs, validate);
+            return this.setAuthStrategy(validate);
         } catch (err) {
             console.log('Error registering jwt plugin' + err);
             throw err;

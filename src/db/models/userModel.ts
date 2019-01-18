@@ -1,9 +1,9 @@
 import Sequelize from 'sequelize';
 import { UserInstance, UserAttributes } from '../types';
 
-export default async function createUserModel(connection: Sequelize.Sequelize) {
+export default async function createUserModel(dbConn: Sequelize.Sequelize) {
 
-    const userModel = connection.define<UserInstance, UserAttributes>('users', {
+    const userModel = dbConn.define<UserInstance, UserAttributes>('users', {
         id: {
             type: Sequelize.INTEGER,
             allowNull: false,

@@ -14,12 +14,10 @@ export interface ServerConfigurations {
     host: string;
     jwtSecret: string;
     jwtExpiration: string;
-    plugins: Array<string>;
-    api: Array<string>;
+    routes: Array<string>;
     fileMaxSize: number;
     fileWhiteList: Array<string>;
     uploadDir: string;
-    workingUrl: string;
     dbUri: string;
 }
 

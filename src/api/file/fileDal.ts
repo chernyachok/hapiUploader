@@ -1,10 +1,14 @@
 import { Request, Response, Readable } from '../../types';
 import FileController from './fileController';
-import { ApiReqHandler } from '../apiDal';
+import { ApiDal } from '../apiDal';
 import { dalErrorHandler } from '../../utils/decorators';
 
 @dalErrorHandler
-export default class FileDal extends ApiReqHandler<FileController> {
+export default class FileDal extends ApiDal<FileController> {
+
+    constructor(fileController: FileController) {
+            super(fileController);
+    }
     
     private async handleFileUpload (file: Readable, h: Response) {
             const { filename } = file.hapi;

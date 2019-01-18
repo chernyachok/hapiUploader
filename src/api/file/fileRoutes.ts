@@ -11,16 +11,16 @@ import { Server } from '../../types/server';
 import { Request } from '../../types/request';
 import { Response } from '../../types/response';
 import { ServerConfigurations } from '../../configurations';
-import FileReqHandler from './fileDal';
+import FileDal from './fileDal';
 
-export default async function init(server: Server, configs: ServerConfigurations, fileController: FileReqHandler) {
+export default async function init(server: Server, serverConfigs: ServerConfigurations, fileDal: FileDal) {
 
     server.route({
         method: 'GET',
         path: '/main',
         options: {
             auth: 'jwt',
-            handler: fileController.getViewOfListOfFiles
+            handler: fileDal.getViewOfListOfFiles
         }
     });
 
@@ -29,7 +29,7 @@ export default async function init(server: Server, configs: ServerConfigurations
         path: '/files',
         options: {
             auth: 'jwt',
-            handler: fileController.getListOfFiles,
+            handler: fileDal.getListOfFiles,
             validate: {
                 headers: jwtValidator
             },
@@ -44,7 +44,7 @@ export default async function init(server: Server, configs: ServerConfigurations
             auth: 'jwt',
             handler: {
                 directory: {
-                    path: path.join(process.cwd(), configs.uploadDir)
+                    path: path.join(process.cwd(), serverConfigs.uploadDir)
                 }
             },
             validate: {
@@ -59,7 +59,7 @@ export default async function init(server: Server, configs: ServerConfigurations
         path: '/files',
         options: {
             auth: 'jwt',
-            handler: fileController.updateFile,
+            handler: fileDal.updateFile,
             validate: {
                 headers: jwtValidator,
                 payload: updateValidator
@@ -73,7 +73,7 @@ export default async function init(server: Server, configs: ServerConfigurations
         path: '/files',
         options: {
             auth: 'jwt',
-            handler: fileController.deleteFile,
+            handler: fileDal.deleteFile,
             validate: {
                 headers: jwtValidator,
                 payload: deleteValidator
@@ -90,14 +90,14 @@ export default async function init(server: Server, configs: ServerConfigurations
             pre: [
                 {
                     assign: 'file',
-                    method: handleFileValidation('logo', getImageAllowedFormats(configs.fileWhiteList))
+                    method: handleFileValidation('logo', getImageAllowedFormats(serverConfigs.fileWhiteList))
                 }
             ],
-            handler: fileController.saveLogo,
+            handler: fileDal.saveLogo,
             payload: {
                 output: 'stream',
                 allow: "multipart/form-data",
-                maxBytes: configs.fileMaxSize
+                maxBytes: serverConfigs.fileMaxSize
             },
             validate: {
                 headers: jwtValidator,
@@ -115,14 +115,14 @@ export default async function init(server: Server, configs: ServerConfigurations
             pre: [
                 {
                     assign: 'file',
-                    method: handleFileValidation('file', getDocsAllowedFormats(configs.fileWhiteList))
+                    method: handleFileValidation('file', getDocsAllowedFormats(serverConfigs.fileWhiteList))
                 }
             ],
-            handler: fileController.saveJob,
+            handler: fileDal.saveJob,
             payload: {
                 output: 'stream',
                 allow: "multipart/form-data",
-                maxBytes: configs.fileMaxSize
+                maxBytes: serverConfigs.fileMaxSize
             },
             validate: {
                 headers: jwtValidator,

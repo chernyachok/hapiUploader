@@ -2,19 +2,16 @@ import {
     createContainer,
     asClass,
     asFunction,
-    asValue,
 }
 from 'awilix';
-import { getServerConfigs, ServerConfigurations } from './configurations';
-import { initDb } from './db/init';
-import { initModels } from './db';
+import { getServerConfigs } from './configurations';
 
 export const configureContainer = async () => {
     const initContainer = createContainer({
         injectionMode: 'CLASSIC'
     });
     initContainer.loadModules([
-        ['db/**/*.js', {
+        ['db/models/**/*.js', {
             register: asFunction
         }],
         ['plugins/**/*.js', {
@@ -23,10 +20,10 @@ export const configureContainer = async () => {
         ['server/**/*.js', {
             register: asFunction
         }],
-        ['api/**/+(controller|dal|apiController|apiDal|fileSystem).js', {
+        ['api/**/+(fileController|userController|fileDal|userDal|apiController|apiDal).js', { /// <- TO BE FIXED
             register: asClass
         }],
-        ['api/**/!(controller|dal|apiController|apiDal|fileSystem).js', {
+        ['api/**/+(fileRoutes|userRoutes).js', {
             register: asFunction
         }]
     ], {
@@ -38,12 +35,6 @@ export const configureContainer = async () => {
     }).register({
         serverConfigs: asFunction(getServerConfigs).singleton()
     });
-    const dbConn = await initDb(initContainer.resolve<ServerConfigurations>('serverConfigs'));
-    const modelList = await initModels(dbConn);
-
-    initContainer.register({
-        modelList: asValue(modelList)
-    });
-
+    // console.log(Object.getOwnPropertyNames(initContainer.cradle));
     return initContainer;
 };
