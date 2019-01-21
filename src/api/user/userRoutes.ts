@@ -7,6 +7,8 @@ import UserDal from "./userDal";
 
 export default async function init(server: Server, userDal: UserDal) {
 
+    server.bind(userDal); 
+    
     server.route({
         method: 'GET',
         path: '/users/me',

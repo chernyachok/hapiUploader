@@ -14,6 +14,7 @@ import { ServerConfigurations } from '../../configurations';
 import FileDal from './fileDal';
 
 export default async function init(server: Server, serverConfigs: ServerConfigurations, fileDal: FileDal) {
+    server.bind(fileDal);
 
     server.route({
         method: 'GET',

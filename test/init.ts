@@ -5,11 +5,10 @@ dotenv.config({path: path.join(process.cwd(), '.env.test')});
 import { initServer } from '../src/server/configureServer';
 import { initDb } from '../src/db/init';
 import { initModels } from '../src/db';
-import { getServerConfigs, ServerConfigurations } from '../src/configurations';
+import { ServerConfigurations } from '../src/configurations';
+import { configureContainer } from '../src/diContainer';
 import { Server } from '../src/types/server';
 import { Sequelize } from 'sequelize';
-import { configureContainer } from '../src/diContainer';
-import { AwilixContainer } from 'awilix';
 
 interface InitResult {
     server: Server;
@@ -18,12 +17,11 @@ interface InitResult {
 }
 
 let server: Server;
-let container: AwilixContainer;
 
 export default async function init(useCachedVersion = true): Promise<InitResult> {
     try {
-        
-        container = await configureContainer();
+       
+        const container = await configureContainer();
         await initDb(container);
         await initModels(container);
 

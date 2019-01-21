@@ -20,14 +20,14 @@ export const configureContainer = async () => {
         ['server/**/*.js', {
             register: asFunction
         }],
-        ['api/**/+(fileController|userController|fileDal|userDal|apiController|apiDal).js', { /// <- TO BE FIXED
+        ['api/**/+(*Controller|*Dal).js', { /// <- TO BE FIXED
             register: asClass
         }],
-        ['api/**/+(fileRoutes|userRoutes).js', {
+        ['api/**/+(*Routes|*Routes).js', {
             register: asFunction
         }]
     ], {
-        cwd: __dirname,
+        cwd: process.cwd() + '/build',
         formatName: 'camelCase',
         resolverOptions: {
             lifetime: 'SINGLETON'
@@ -35,6 +35,7 @@ export const configureContainer = async () => {
     }).register({
         serverConfigs: asFunction(getServerConfigs).singleton()
     });
-
+    // console.log(Object.getOwnPropertyNames(initContainer.cradle))
+   
     return initContainer;
 };

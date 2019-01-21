@@ -9,6 +9,8 @@ export const getFolderFileNames = (folder: string) => {
 
 export const initModels = async (container: AwilixContainer) => {
     const modelPromises = getFolderFileNames(path.join(__dirname, 'models')).map(async (modelName: string) => {
+        
+        console.log(Object.getOwnPropertyNames(container.cradle));
         const model = await container.resolve(modelName);
         container.register({
             [modelName]: asValue(model)
