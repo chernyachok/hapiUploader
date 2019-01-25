@@ -1,7 +1,6 @@
 node_modules
 public/files/**
 public/files-test/**
-.env*
 build
 .vscode
-launch.sh
+# .env*
