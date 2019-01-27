@@ -4,25 +4,28 @@ services:
     build: .
     container_name: hapi
     ports:
-     - 8082:8000
-    links:
-     - database
+     - 8000:8000
     env_file:
      - .env
     networks:
-     - back
+     - db-net
     volumes:
      - ./:/app
-  database:
-    image: mysql
+    depends_on: 
+     - db
+
+  db:
+    build: ./src/db
+    hostname: db
     container_name: hapi_db
+    restart: always
     networks:
-     - back
-    environment:
-       MYSQL_ROOT_PASSWORD: 123
+     - db-net
     ports: 
      - 33060:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    
 
 networks:
-  back:
-    driver: bridge
+  db-net:

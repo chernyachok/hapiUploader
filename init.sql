@@ -1,3 +1,0 @@
-CREATE USER root1 IDENTIFIED BY 123;
-CREATE DATABASE hapi_uploader;
-GRANT ALL PRIVILEGES ON hapi_uploader.* TO root1;
